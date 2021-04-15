@@ -1,0 +1,29 @@
+version: "3"
+services:
+  database:
+    image: "postgres"
+    environment:
+      - POSTGRES_USER=docker
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_DB=lemoncat
+    container_name: postgres
+    restart: always
+    volumes:
+      - ./var/lib/postgresql/data/
+    ports:
+      - "5432:5432"
+    network_mode: "host"
+  web:
+    image: 127.0.0.1:3841
+    depends_on:
+      - database
+    container_name: app
+    volumes:
+      - /home/ltdat6499/Desktop/lemoncat:/app
+    build:
+      context: .
+    ports:
+      - "3841:3841"
+    network_mode: "host"
+volumes:
+  database_data: 
