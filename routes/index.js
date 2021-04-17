@@ -1,9 +1,10 @@
-const express = require("express");
-const router = express.Router();
+// const express = require("express");
+// const router = express.Router();
 
-/* GET home page. */
-router.get("/", (req, res, next) => {
-  res.status(500).json({ hihi: true });
-});
+const { graphqlHTTP } = require("express-graphql");
 
-module.exports = router;
+const adminGraphql = require("../graphql/admin");
+
+module.exports = {
+  admin: graphqlHTTP(adminGraphql),
+};

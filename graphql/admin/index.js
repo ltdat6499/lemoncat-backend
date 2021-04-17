@@ -1,16 +1,15 @@
-const adapter = require("join-monster-graphql-tools-adapter");
-const { makeExecutableSchema } = require("graphql-tools");
+const requireText = require("require-text");
+const { buildSchema } = require("graphql");
 
-const typeDefs = require("./schema");
+const typeDefs = requireText("./schema.graphql", require);
 const modules = require("./modules");
 const scalars = require("../base/scalars");
 
-const resolvers = {
-  ...scalars,
-  ...modules.resolvers,
+module.exports = {
+  schema: buildSchema(typeDefs),
+  rootValue: {
+    ...scalars,
+    ...modules.resolvers,
+  },
+  graphiql: true,
 };
-
-const schema = makeExecutableSchema({ typeDefs, resolvers });
-adapter(schema, modules.jmDefs);
-
-module.exports = schema;

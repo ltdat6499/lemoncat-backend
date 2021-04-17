@@ -96,16 +96,16 @@ scalar Void
 
 schema {
   query: Query
-  mutation: Mutation
+  # mutation: Mutation
 }
 
 type Query {
   users: [User]
 }
 
-type Mutation {
+# type Mutation {
 
-}
+# }
 
 type User {
   id: String
