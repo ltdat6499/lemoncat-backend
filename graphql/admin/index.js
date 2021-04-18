@@ -1,15 +1,17 @@
 const requireText = require("require-text");
-const { buildSchema } = require("graphql");
+const { makeExecutableSchema } = require("graphql-tools");
+const { graphqlHTTP } = require("express-graphql");
 
 const typeDefs = requireText("./schema.graphql", require);
-const modules = require("./modules");
+const resolvers = require("./modules");
 const scalars = require("../base/scalars");
 
-module.exports = {
-  schema: buildSchema(typeDefs),
-  rootValue: {
-    ...scalars,
-    ...modules.resolvers,
-  },
+const executableSchema = makeExecutableSchema({
+  typeDefs,
+  resolvers: { ...scalars, ...resolvers },
+});
+
+module.exports = graphqlHTTP({
+  schema: executableSchema,
   graphiql: true,
-};
+});

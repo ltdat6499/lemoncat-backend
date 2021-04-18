@@ -94,25 +94,12 @@ scalar Byte
 
 scalar Void
 
-schema {
-  query: Query
-  # mutation: Mutation
-}
-
-type Query {
-  users: [User]
-}
-
-# type Mutation {
-
-# }
-
 type User {
-  id: String
+  id: Int
   email: String
   password: String
   name: String
-  image: String
+  image: JSON
   token: String
   status: Boolean
   role: String
@@ -120,4 +107,22 @@ type User {
   otp: String
   createdAt: Date
   updatedAt: Date
+}
+
+type UserResults {
+  data: [User]
+  errors: [JSON]
+}
+
+type Query {
+  users: UserResults
+}
+
+type Mutation {
+  test: String
+}
+
+schema {
+  query: Query
+  mutation: Mutation
 }

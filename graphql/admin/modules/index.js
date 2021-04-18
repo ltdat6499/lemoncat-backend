@@ -1,12 +1,6 @@
 const _ = require("lodash");
 
 const modules = [require("./users")];
+const resolvers = modules.reduce((list = {}, items) => _.merge(list, items));
 
-const mergeAll = (items) => _.reduce(items, _.merge);
-const resolvers = mergeAll(modules.map((m) => m.resolvers));
-const schemaDefs = mergeAll(modules.map((m) => m.schemaDefs));
-
-module.exports = {
-  resolvers,
-  schemaDefs,
-};
+module.exports = resolvers;

@@ -1,29 +1,16 @@
 const { users } = require("../../../controllers");
 
-const schemaDefs = {
-  name: "User",
-  fields: {
-    createdAt: {
-      resolve: (parent) => parent.created_at,
-    },
-    updatedAt: {
-      resolve: (parent) => parent.updated_at,
-    },
-  },
-};
-
-const resolvers = {
+module.exports = {
   Query: {
-    users: async (req, res) => {
+    async users(req, res) {
       return {
-        data: [],
+        data: await users.getAll(),
         errors: [],
       };
     },
   },
-};
-
-module.exports = {
-  resolvers,
-  schemaDefs,
+  User: {
+    createdAt: (parent) => parent.created_at,
+    updatedAt: (parent) => parent.updated_at,
+  },
 };
