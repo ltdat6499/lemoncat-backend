@@ -15,7 +15,6 @@ const schemaDefs = {
 const resolvers = {
   Query: {
     users: async (req, res) => {
-      // console.log(process.cwd());
       return {
         data: [],
         errors: [],

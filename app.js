@@ -19,6 +19,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/admin-graphql", router.admin);
+app.use(router.auth);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

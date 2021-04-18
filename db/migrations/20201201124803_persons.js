@@ -4,9 +4,8 @@ exports.up = async (knex) => {
     (
       id SERIAL PRIMARY KEY,
       name TEXT,
-      birth TEXT,
+      birth DATE,
       born_in TEXT,
-      poster TEXT,
       summary TEXT,
       images TEXT[],
       created_at timestamptz DEFAULT now(),

@@ -4,6 +4,8 @@ exports.up = async (knex) => {
     (
       id SERIAL PRIMARY KEY,
       name TEXT DEFAULT '',
+      description TEXT DEFAULT '',
+      alias TEXT DEFAULT '',
       type TEXT DEFAULT '',
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()

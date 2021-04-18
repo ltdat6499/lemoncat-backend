@@ -3,11 +3,11 @@ exports.up = async (knex) => {
     CREATE TABLE comments
     (
       id SERIAL PRIMARY KEY,
-      post INT,
+      parent INT,
+      parent_type TEXT,
       uid INT,
       interact BOOL DEFAULT FALSE,
       content TEXT,
-      sub_comments JSON,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )

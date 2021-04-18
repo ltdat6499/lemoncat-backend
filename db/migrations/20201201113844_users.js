@@ -6,7 +6,7 @@ exports.up = async (knex) => {
       email TEXT NOT NULL UNIQUE,
       password TEXT,
       name TEXT,
-      image TEXT,
+      image JSON,
       token TEXT,
       status BOOL DEFAULT true,
       role TEXT NOT NULL DEFAULT 'user',

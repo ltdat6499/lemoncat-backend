@@ -7,7 +7,7 @@ exports.up = async (knex) => {
       summary TEXT,
       rating TEXT DEFAULT 'PG-13',
       genres TEXT[],
-      on_screen TEXT,
+      on_screen DATE,
       images TEXT[],
       lemon_score INT DEFAULT 0,
       user_score INT DEFAULT 0,
