@@ -6,12 +6,12 @@ const typeDefs = requireText("./schema.graphql", require);
 const resolvers = require("./modules");
 const scalars = require("../base/scalars");
 
-const executableSchema = makeExecutableSchema({
+const schema = makeExecutableSchema({
   typeDefs,
   resolvers: { ...scalars, ...resolvers },
 });
 
 module.exports = graphqlHTTP({
-  schema: executableSchema,
+  schema,
   graphiql: true,
 });

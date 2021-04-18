@@ -105,8 +105,8 @@ type User {
   role: String
   elo: JSON
   otp: String
-  createdAt: Date
-  updatedAt: Date
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type UserResults {
