@@ -5,6 +5,7 @@ exports.seed = async (knex) => {
   const list = [];
   for (let i = 0; i < 100; i++) {
     list.push({
+      id: i,
       uid: tools.getRandomBetween(0, 101),
       title: tools.genTitle(),
       content,

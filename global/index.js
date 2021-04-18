@@ -288,6 +288,130 @@ const categoriesList = [
     description: `Shortly after shooting begins, the editor begins to organize the footage and arranges individual shots into one continuous sequence. Even in a single scene, dozens of different shots have to be chosen and assembled from hundreds of feet of film. The editor's choices about which shots to use, and the order in which to place them, have a profound effect on the appearance of the final film.`,
     type: "production",
   },
+  {
+    name: "comment",
+    type: "comment",
+  },
+  {
+    name: "post",
+    type: "comment",
+  },
+  {
+    name: "noob",
+    type: "interact",
+  },
+  {
+    name: "hate",
+    type: "interact",
+  },
+  {
+    name: "sad",
+    type: "interact",
+  },
+  {
+    name: "like",
+    type: "interact",
+  },
+  {
+    name: "love",
+    type: "interact",
+  },
+  {
+    name: "pro",
+    type: "interact",
+  },
+  {
+    name: "lemoncat awards",
+    type: "winners",
+  },
+  {
+    name: "oscars",
+    type: "winners",
+  },
+  {
+    name: "golden globes",
+    type: "winners",
+  },
+  {
+    name: "top by genre",
+    type: "best",
+  },
+  {
+    name: "top by year",
+    type: "best",
+  },
+  {
+    name: "top by rated",
+    type: "best",
+  },
+  {
+    name: "best picture",
+    type: "winner categories",
+  },
+  {
+    name: "best original screenplay",
+    type: "winner categories",
+  },
+  {
+    name: "best adapted screenplay",
+    type: "winner categories",
+  },
+  {
+    name: "best cinematography",
+    type: "winner categories",
+  },
+  {
+    name: "best production design",
+    type: "winner categories",
+  },
+  {
+    name: "best editing",
+    type: "winner categories",
+  },
+  {
+    name: "best original song",
+    type: "winner categories",
+  },
+  {
+    name: "best costume design",
+    type: "winner categories",
+  },
+  {
+    name: "best sound mixing",
+    type: "winner categories",
+  },
+  {
+    name: "best sound editing",
+    type: "winner categories",
+  },
+  {
+    name: "best visual effects",
+    type: "winner categories",
+  },
+  {
+    name: "best foreign-language film",
+    type: "winner categories",
+  },
+  {
+    name: "best animated feature film",
+    type: "winner categories",
+  },
+  {
+    name: "best animated short",
+    type: "winner categories",
+  },
+  {
+    name: "best live-action short",
+    type: "winner categories",
+  },
+  {
+    name: "best documentary feature",
+    type: "winner categories",
+  },
+  {
+    name: "best documentary short",
+    type: "winner categories",
+  },
 ];
 
 const readFile = (filePath) => {
@@ -331,8 +455,9 @@ const getRandomBetween = (min, max) => {
 };
 
 const getRandomCategories = (type, length) => {
-  const typeList = categoriesList.filter((item) => item.type === type);
-  return _.shuffle(typeList).slice(0, length);
+  const types = categoriesList.filter((item) => item.type === type);
+  if (length === "full") return types;
+  return _.shuffle(types).slice(0, length);
 };
 
 const futureDateTypes = ["future", "recent", "soon"];

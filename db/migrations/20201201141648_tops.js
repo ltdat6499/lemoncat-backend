@@ -1,10 +1,11 @@
 exports.up = async (knex) => {
   await knex.raw(`
-    CREATE TABLE best_movies 
+    CREATE TABLE tops
     (
       id SERIAL PRIMARY KEY,
-      name TEXT,
-      movie INT,
+      type TEXT,
+      year TEXT,
+      data JSON,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )
@@ -13,6 +14,6 @@ exports.up = async (knex) => {
 
 exports.down = async (knex) => {
   await knex.raw(`
-    DROP TABLE best_movies
+    DROP TABLE tops
   `);
 };

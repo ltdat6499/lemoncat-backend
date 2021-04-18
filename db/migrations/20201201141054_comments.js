@@ -6,7 +6,7 @@ exports.up = async (knex) => {
       parent INT,
       parent_type TEXT,
       uid INT,
-      interact BOOL DEFAULT FALSE,
+      interact TEXT,
       content TEXT,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
