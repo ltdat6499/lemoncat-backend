@@ -7,11 +7,11 @@ exports.up = async (knex) => {
       password TEXT,
       name TEXT,
       image JSON,
-      token TEXT,
+      token TEXT DEFAULT NULL,
       status BOOL DEFAULT true,
-      role TEXT NOT NULL DEFAULT 'user',
-      elo JSON,
-      otp TEXT,
+      role TEXT DEFAULT 'user',
+      elo JSON DEFAULT NULL,
+      otp TEXT DEFAULT NULL,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )

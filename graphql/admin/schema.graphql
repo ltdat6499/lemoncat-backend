@@ -109,17 +109,23 @@ type User {
   updatedAt: DateTime
 }
 
-type UserResults {
-  data: [User]
-  errors: [JSON]
+input UserInput {
+  email: String
+  password: String
+  name: String
+  image: JSON
+  token: String
 }
 
 type Query {
-  users: UserResults
+  users: [User]
+  user(id: Int): User
 }
 
 type Mutation {
-  test: String
+  createUser(input: UserInput): User
+  updateUser(id: Int, input: UserInput): User
+  deleteUser(id: Int): Boolean
 }
 
 schema {

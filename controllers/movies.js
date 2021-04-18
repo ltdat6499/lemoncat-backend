@@ -1,23 +1,23 @@
 const knex = require("./knex");
 
 const getAll = async () => {
-  return await knex("users").select();
+  return await knex("movies").select();
 };
 
 const getById = async (id) => {
-  return await knex("users").select().where({ id }).first();
+  return await knex("movies").select().where({ id }).first();
 };
 
 const create = async (instance) => {
-  return await knex("users").insert(instance).returning("*");
+  return await knex("movies").insert(instance).returning("*");
 };
 
 const deleteById = async (id) => {
-  return await knex("users").del().where({ id }).returning("*");
+  return await knex("movies").del().where({ id });
 };
 
 const update = async (id, instance) => {
-  return await knex("users").update(instance).where({ id }).returning("*");
+  return await knex("movies").update(instance).where({ id }).returning("*");
 };
 
 module.exports = {
