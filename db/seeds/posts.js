@@ -3,10 +3,10 @@ const { content, contentHtml } = tools.genContent();
 
 exports.seed = async (knex) => {
   const list = [];
-  for (let i = 0; i < 100; i++) {
+  for (const id of tools.postIds) {
     list.push({
-      id: i,
-      uid: tools.getRandomBetween(0, 101),
+      id,
+      uid: tools.userIds[tools.getRandomBetween(-1, 100)],
       title: tools.genTitle(),
       content,
       content_html: contentHtml,

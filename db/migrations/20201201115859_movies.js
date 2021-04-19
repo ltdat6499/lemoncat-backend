@@ -2,7 +2,7 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE movies 
     (
-      id SERIAL PRIMARY KEY,
+      id TEXT PRIMARY KEY,
       name TEXT,
       summary TEXT,
       rating TEXT DEFAULT 'PG-13',

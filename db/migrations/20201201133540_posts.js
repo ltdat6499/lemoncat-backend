@@ -2,8 +2,8 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE posts 
     (
-      id SERIAL PRIMARY KEY,
-      uid INT NOT NULL,
+      id TEXT PRIMARY KEY,
+      uid TEXT NOT NULL,
       title TEXT,
       content TEXT,
       content_html TEXT,

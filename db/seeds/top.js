@@ -11,11 +11,13 @@ exports.seed = async (knex) => {
     for (const winner of winners) {
       for (const category in winnerCategories) {
         list.push({
+          id: tools.genId(),
           type: "winners",
           data: {
+            id: tools.genId(),
             name: winner,
             type: category,
-            movie: tools.getRandomBetween(0, 101),
+            movie: tools.movieIds[tools.getRandomBetween(-1, 100)],
           },
           year,
         });
@@ -25,6 +27,6 @@ exports.seed = async (knex) => {
   return await knex("tops")
     .del()
     .then(async () => {
-      await knex("tops").insert(list);
+      await knex("tops").insert(tools._.uniqBy(list, "id"));
     });
 };

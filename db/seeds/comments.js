@@ -1,28 +1,28 @@
 const tools = require("../../global");
 const list = [];
-let id = 1;
-for (let i = 1; i <= 100; i++) {
-  for (let t = 1; t <= 50; t++) {
-    const rootId = id;
+let index = 0;
+for (let i = 0; i < 100; i++) {
+  for (let t = 0; t < 50; t++) {
+    const rootId = tools.commentIds[index];
     list.push({
-      id,
-      parent: i,
+      id: rootId,
+      parent: tools.postIds[i],
       parent_type: "post",
-      uid: t,
+      uid: tools.userIds[t],
       interact: tools._.head(tools.getRandomCategories("interact", 1)).name,
       content: tools.genContent().content,
     });
-    id++;
+    index++;
     for (let j = 0; j < 10; j++) {
       list.push({
-        id,
+        id: tools.commentIds[index],
         parent: rootId,
         parent_type: "comment",
-        uid: tools.getRandomBetween(0, 101),
+        uid: tools.userIds[tools.getRandomBetween(-1, 100)],
         interact: tools._.head(tools.getRandomCategories("interact", 1)).name,
         content: tools.genContent().content,
       });
-      id++;
+      index++;
     }
   }
 }

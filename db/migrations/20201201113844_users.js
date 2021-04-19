@@ -2,7 +2,7 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE users 
     (
-      id SERIAL PRIMARY KEY,
+      id TEXT PRIMARY KEY,
       email TEXT NOT NULL UNIQUE,
       password TEXT,
       name TEXT,

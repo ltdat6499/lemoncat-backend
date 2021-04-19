@@ -1,7 +1,7 @@
 const knex = require("./knex");
 
 const getAll = async () => {
-  return await knex("comments").select();
+  return await knex("comments").select().limit(5000);
 };
 
 const getById = async (id) => {
@@ -13,7 +13,7 @@ const create = async (instance) => {
 };
 
 const deleteById = async (id) => {
-  return await knex("comments").del().where({ id });
+  return await knex("comments").del().where({ id }).returning("*");
 };
 
 const update = async (id, instance) => {

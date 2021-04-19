@@ -2,7 +2,7 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE persons 
     (
-      id SERIAL PRIMARY KEY,
+      id TEXT PRIMARY KEY,
       name TEXT,
       birth DATE,
       born_in TEXT,

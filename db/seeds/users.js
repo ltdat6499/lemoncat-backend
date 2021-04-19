@@ -2,19 +2,19 @@ const tools = require("../../global/");
 
 exports.seed = async (knex) => {
   const list = [];
-  for (let i = 1; i <= 100; i++) {
+  for (const id of tools.userIds) {
     list.push({
-      id: i,
+      id,
       email: tools.genEmail(),
-      password: await tools.helpers.hashPassword("lemoncat"),
+      password: await tools.hashPassword("lemoncat"),
       name: tools.genName(),
       image: {
-        id: tools.genId(),
+        id: tools.genFakeId(),
         src: tools.genAvatar(),
       },
       token: "",
       status: !!tools.getRandomBetween(-1, 2),
-      role: i % 10 === 0 ? "s-user" : "user",
+      role: tools.getRandomBetween(-1, 2) === true ? "s-user" : "user",
       elo: {},
       otp: "",
     });

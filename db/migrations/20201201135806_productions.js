@@ -2,9 +2,9 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE productions
     (
-      id SERIAL PRIMARY KEY,
-      movie INT,
-      person INT,
+      id TEXT PRIMARY KEY,
+      movie TEXT,
+      person TEXT,
       type TEXT DEFAULT 'actors',
       character TEXT,
       created_at timestamptz DEFAULT now(),

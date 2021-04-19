@@ -1,8 +1,6 @@
 const _ = require("lodash");
-const fs = require("fs");
-const faker = require("faker");
 
-const helpers = { ...require("./password") };
+const changeCase = require("change-case");
 
 const categoriesList = [
   {
@@ -412,42 +410,12 @@ const categoriesList = [
     name: "best documentary short",
     type: "winner categories",
   },
-];
-
-const readFile = (filePath) => {
-  try {
-    return fs.readFileSync(filePath, "utf8");
-  } catch (e) {
-    return "ERROR";
-  }
-};
-
-const genJson = () => faker.datatype.json();
-
-const genId = () => faker.datatype.uuid();
-
-const genAvatar = () => faker.image.avatar();
-
-const genName = () => faker.name.findName();
-
-const genWords = (number) => faker.lorem.words(number);
-
-const genEmail = () => faker.internet.email();
-
-const genTitle = () => faker.name.title();
-
-const genParagraphs = (number) => faker.lorem.paragraphs(number);
-
-const encode = (file) => {
-  const bitmap = fs.readFileSync(file);
-  return new Buffer(bitmap).toString("base64");
-};
-
-const getRandom = (max) => {
-  const result = Math.floor(1 + Math.random() * Math.floor(max));
-  if (result < 10) return "0" + result;
-  return result.toString();
-};
+].map((item) => {
+  item.id = require("./seed-ids/index").randomIds[
+    Math.floor(Math.random() * 115000)
+  ];
+  return item;
+});
 
 const getRandomBetween = (min, max) => {
   const result = Math.floor(min + 1 + Math.random() * Math.floor(max));
@@ -460,77 +428,28 @@ const getRandomCategories = (type, length) => {
   return _.shuffle(types).slice(0, length);
 };
 
-const futureDateTypes = ["future", "recent", "soon"];
-const genRandomFutureDate = () =>
-  faker.date[_.head(_.shuffle(futureDateTypes))]();
-const genRandomPastDate = () =>
-  faker.date.between(new Date(1960, 1, 30), new Date(2000, 1, 30));
-const genCountryName = () => faker.address.country();
-const imageTypes = [
-  "image",
-  "abstract",
-  "animals",
-  "business",
-  "city",
-  "nightlife",
-  "fashion",
-  "people",
-  "nature",
-  "sports",
-  "technics",
-  "transport",
-];
-const genImages = (length) => {
-  const list = [
-    {
-      id: genId(),
-      src: faker.image.image(),
-    },
-  ];
-  for (let i = 1; i < length; i++) {
-    list.push({
-      id: genId(),
-      src: faker.image[_.head(_.shuffle(imageTypes))](),
-    });
+const deepClone = (instance) => JSON.parse(JSON.stringify(instance));
+
+const changeCaseType = (items, type) => {
+  for (const key in items) {
+    const newKey = changeCase[type](key);
+    if (newKey !== key) {
+      items[newKey] = items[key];
+      delete items[key];
+    }
   }
-  return list;
-};
-
-const genContent = () => {
-  const content = faker.name.jobDescriptor();
-  return {
-    content,
-    contentHtml: `<strong>${content}</strong>`,
-  };
-};
-
-const genTags = (length = 10) => {
-  const list = [];
-  for (let i = 0; i < length; i++) list.push(faker.music.genre());
-  return list;
+  return items;
 };
 
 module.exports = {
-  _,
-  encode,
-  genRandomFutureDate,
-  genJson,
-  genId,
-  genAvatar,
-  genName,
-  readFile,
-  genWords,
-  genEmail,
-  genTitle,
-  getRandom,
-  genParagraphs,
-  getRandomBetween,
-  helpers,
-  categoriesList,
+  ...require("./seed-ids"),
+  ...require("./password"),
+  ...require("./gen-id.js"),
+  ...require("./faker"),
   getRandomCategories,
-  genImages,
-  genRandomPastDate,
-  genCountryName,
-  genContent,
-  genTags,
+  getRandomBetween,
+  changeCaseType,
+  categoriesList,
+  deepClone,
+  _,
 };

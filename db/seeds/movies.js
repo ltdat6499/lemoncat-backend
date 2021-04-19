@@ -2,9 +2,9 @@ const tools = require("../../global/");
 
 exports.seed = async (knex) => {
   const list = [];
-  for (let i = 1; i <= 100; i++) {
+  for (const id of tools.movieIds) {
     list.push({
-      id: i,
+      id,
       name: tools.genName(),
       summary: tools.genParagraphs(5),
       rating: tools._.head(tools.getRandomCategories("rating", 1)).name,

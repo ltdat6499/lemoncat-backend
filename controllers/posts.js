@@ -13,7 +13,7 @@ const create = async (instance) => {
 };
 
 const deleteById = async (id) => {
-  return await knex("posts").del().where({ id });
+  return await knex("posts").del().where({ id }).returning("*");
 };
 
 const update = async (id, instance) => {
