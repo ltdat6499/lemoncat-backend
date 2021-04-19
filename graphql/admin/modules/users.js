@@ -1,4 +1,5 @@
 const { users } = require("../../../controllers");
+const tools = require("../../../global");
 
 module.exports = {
   Query: {
@@ -12,6 +13,7 @@ module.exports = {
   },
   Mutation: {
     async createUser(__, { input }) {
+      input.id = tools.genId();
       const [result] = await users.create(input);
       return result;
     },

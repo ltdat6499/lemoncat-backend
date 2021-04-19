@@ -7,6 +7,7 @@ exports.seed = async (knex) => {
       id,
       name: tools.genName(),
       summary: tools.genParagraphs(5),
+      genres: tools.getRandomCategories("genre", 5).map((item) => item.name),
       rating: tools._.head(tools.getRandomCategories("rating", 1)).name,
       on_screen: tools.genRandomFutureDate(),
       images: tools.genImages(10),

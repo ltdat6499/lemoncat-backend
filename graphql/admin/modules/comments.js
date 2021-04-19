@@ -1,5 +1,5 @@
 const { comments } = require("../../../controllers");
-const { changeCaseType } = require("../../../global");
+const tools = require("../../../global");
 
 module.exports = {
   Query: {
@@ -13,13 +13,8 @@ module.exports = {
   },
   Mutation: {
     async createComment(__, { input }) {
-      input = changeCaseType(input, "snakeCase");
-      console.log(
-        "%c≫",
-        "color: #0039f5",
-        " ~ createComment ~ changeCaseType",
-        input
-      );
+      input.id = tools.genId();
+      input = tools.changeCaseType(input, "snakeCase");
       const [result] = await comments.create(input);
       return result;
     },

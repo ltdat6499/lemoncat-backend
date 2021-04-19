@@ -89,11 +89,38 @@ input CommentInput {
   content: String
 }
 
+type Movie {
+  id: String
+  summary: String
+  rating: String
+  images: [JSON]
+  genres: [String]
+  onScreen: DateTime
+  lemonScore: Int
+  userScore: Int
+  status: Boolean
+  hot: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input MovieInput {
+  summary: String
+  rating: String
+  images: [JSON]
+  genres: [String]
+  onScreen: DateTime
+  status: Boolean
+  hot: Boolean
+}
+
 type Query {
   users: [User]
   user(id: String): User
   comments: [Comment]
   comment(id: String): Comment
+  movies: [Movie]
+  movie(id: String): Movie
 }
 
 type Mutation {
@@ -103,6 +130,9 @@ type Mutation {
   createComment(input: CommentInput): Comment
   updateComment(id: String, input: CommentInput): Comment
   deleteComment(id: String): Boolean
+  createMovie(input: MovieInput): Movie
+  updateMovie(id: String, input: MovieInput): Movie
+  deleteMovie(id: String): Boolean
 }
 
 schema {
