@@ -7,7 +7,7 @@ exports.up = async (knex) => {
       birth DATE,
       born_in TEXT,
       summary TEXT,
-      images TEXT[],
+      images JSON[],
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )

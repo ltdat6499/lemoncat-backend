@@ -9,11 +9,11 @@ exports.up = async (knex) => {
       content_html TEXT,
       tags TEXT[],
       score INT DEFAULT 50,
+      interact TEXT,
       category TEXT DEFAULT 'Review',
-      Interact INT DEFAULT 0,
+      status BOOL DEFAULT TRUE,
       created_at timestamptz DEFAULT now(),
-      updated_at timestamptz DEFAULT now(),
-      status BOOL DEFAULT TRUE
+      updated_at timestamptz DEFAULT now()
     )
   `);
 };

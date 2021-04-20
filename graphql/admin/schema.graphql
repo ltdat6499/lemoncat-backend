@@ -52,7 +52,7 @@ type User {
   email: String
   password: String
   name: String
-  image: JSON
+  image: Image
   token: String
   status: Boolean
   role: String
@@ -66,7 +66,7 @@ input UserInput {
   email: String
   password: String
   name: String
-  image: JSON
+  image: ImageInput
   token: String
 }
 
@@ -89,11 +89,21 @@ input CommentInput {
   content: String
 }
 
+type Image {
+  id: String
+  src: String
+}
+
+input ImageInput {
+  id: String
+  src: String
+}
+
 type Movie {
   id: String
   summary: String
   rating: String
-  images: [JSON]
+  images: [Image]
   genres: [String]
   onScreen: DateTime
   lemonScore: Int
@@ -107,11 +117,86 @@ type Movie {
 input MovieInput {
   summary: String
   rating: String
-  images: [JSON]
+  images: [ImageInput]
   genres: [String]
   onScreen: DateTime
   status: Boolean
   hot: Boolean
+}
+
+type Person {
+  id: String
+  name: String
+  birth: Date
+  bornIn: String
+  summary: String
+  images: [Image]
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input PersonInput {
+  name: String
+  birth: Date
+  bornIn: String
+  summary: String
+  images: [ImageInput]
+}
+
+type Post {
+  id: String
+  uid: String
+  content: String
+  contentHtml: String
+  tags: [String]
+  score: Int
+  interact: String
+  category: String
+  status: Boolean
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input PostInput {
+  content: String
+  contentHtml: String
+  tags: [String]
+  score: Int
+  interact: String
+  category: String
+  status: Boolean
+}
+
+type Production {
+  id: String
+  movie: String
+  person: String
+  type: String
+  character: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input ProductionInput {
+  movie: String
+  person: String
+  type: String
+  character: String
+}
+
+type Top {
+  id: String
+  type: String
+  year: String
+  data: JSON
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input TopInput {
+  type: String
+  year: String
+  data: JSON
 }
 
 type Query {
@@ -121,6 +206,14 @@ type Query {
   comment(id: String): Comment
   movies: [Movie]
   movie(id: String): Movie
+  persons: [Person]
+  person(id: String): Person
+  posts: [Post]
+  post(id: String): Post
+  productions: [Production]
+  production(id: String): Production
+  tops: [Top]
+  top(id: String): Top
 }
 
 type Mutation {
@@ -133,6 +226,18 @@ type Mutation {
   createMovie(input: MovieInput): Movie
   updateMovie(id: String, input: MovieInput): Movie
   deleteMovie(id: String): Boolean
+  createPerson(input: PersonInput): Person
+  updatePerson(id: String, input: PersonInput): Person
+  deletePerson(id: String): Boolean
+  createPost(input: PostInput): Post
+  updatePost(id: String, input: PostInput): Post
+  deletePost(id: String): Boolean
+  createProduction(input: ProductionInput): Production
+  updateProduction(id: String, input: ProductionInput): Production
+  deleteProduction(id: String): Boolean
+  createTop(input: TopInput): Top
+  updateTop(id: String, input: TopInput): Top
+  deleteTop(id: String): Boolean
 }
 
 schema {
