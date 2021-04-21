@@ -1,0 +1,52 @@
+{
+  "roles": ["s-admin", "admin", "s-user", "user", "guest"],
+  "permissions": {
+    "user": ["get", "all", "create", "update", "delete"],
+    "comment": ["get", "all", "create", "update", "delete"],
+    "movie": ["get", "all", "create", "update", "delete"],
+    "person": ["get", "all", "create", "update", "delete"],
+    "post": ["get", "all", "create", "update", "delete"],
+    "production": ["get", "all", "create", "update", "delete"],
+    "top": ["get", "all", "create", "update", "delete"],
+    "category": ["get", "all", "create", "update", "delete"]
+  },
+  "grants": {
+    "guest": ["create_user", "update_user"],
+    "user": [
+      "guest",
+      "get_user",
+      "comment",
+      "get_movie",
+      "all_movie",
+      "get_person",
+      "all_person",
+      "post",
+      "get_production",
+      "all_production",
+      "get_top",
+      "all_top",
+      "get_category",
+      "all_category"
+    ],
+    "s-user": ["user"],
+    "admin": [
+      "s-user",
+      "delete_movie",
+      "update_movie",
+      "create_movie",
+      "delete_person",
+      "update_person",
+      "create_person",
+      "delete_production",
+      "update_production",
+      "create_production",
+      "delete_top",
+      "update_top",
+      "create_top",
+      "delete_category",
+      "update_category",
+      "create_category"
+    ],
+    "s-admin": ["admin", "delete_user"]
+  }
+}

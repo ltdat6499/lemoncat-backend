@@ -8,6 +8,7 @@ const modules = [
   require("./posts"),
   require("./productions"),
   require("./tops"),
+  require("./categories"),
 ];
 const resolvers = modules.reduce((list = {}, items) => _.merge(list, items));
 

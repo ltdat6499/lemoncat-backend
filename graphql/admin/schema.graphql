@@ -199,6 +199,23 @@ input TopInput {
   data: JSON
 }
 
+type Category {
+  id: String
+  name: String
+  description: String
+  alias: String
+  type: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
+
+input CategoryInput {
+  name: String
+  description: String
+  alias: String
+  type: String
+}
+
 type Query {
   users: [User]
   user(id: String): User
@@ -214,6 +231,8 @@ type Query {
   production(id: String): Production
   tops: [Top]
   top(id: String): Top
+  categories: [Category]
+  category(id: String): Category
 }
 
 type Mutation {
@@ -238,6 +257,9 @@ type Mutation {
   createTop(input: TopInput): Top
   updateTop(id: String, input: TopInput): Top
   deleteTop(id: String): Boolean
+  createCategory(input: TopInput): Category
+  updateCategory(id: String, input: CategoryInput): Category
+  deleteCategory(id: String): Boolean
 }
 
 schema {

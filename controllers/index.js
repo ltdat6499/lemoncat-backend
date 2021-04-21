@@ -7,4 +7,5 @@ module.exports = {
   posts: require("./posts"),
   productions: require("./productions"),
   tops: require("./tops"),
+  categories: require("./categories"),
 };
