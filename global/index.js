@@ -1,4 +1,6 @@
 const _ = require("lodash");
+const fs = require("fs");
+const request = require("request");
 
 const changeCase = require("change-case");
 
@@ -441,6 +443,12 @@ const changeCaseType = (items, type) => {
   return items;
 };
 
+const download = (url, path, callback) => {
+  request.head(url, (err, res, body) => {
+    request(url).pipe(fs.createWriteStream(path)).on("close", callback);
+  });
+};
+
 module.exports = {
   ...require("./seed-ids"),
   ...require("./password"),
@@ -451,5 +459,6 @@ module.exports = {
   changeCaseType,
   categoriesList,
   deepClone,
+  download,
   _,
 };

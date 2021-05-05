@@ -19,6 +19,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use(router.middlewares.passports.login);
+app.use(router.middlewares.passports.facebookAuth);
+app.use(router.middlewares.passports.facebookCallback);
+
 app.use("/admin-graphql", router.admin);
 app.use(router.auth);
 

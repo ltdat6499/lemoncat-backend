@@ -53,7 +53,7 @@ type User {
   password: String
   name: String
   image: Image
-  token: String
+  loginData: String
   status: Boolean
   role: String
   elo: JSON

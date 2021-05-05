@@ -1,5 +1,4 @@
-
-exports.up = function(knex) {
+exports.up = async (knex) => {
   await knex.raw(`CREATE SCHEMA lemoncat`);
   await knex.raw(`CREATE SEQUENCE lemoncat.table_id_seq`);
   await knex.raw(
@@ -20,6 +19,4 @@ exports.up = function(knex) {
   );
 };
 
-exports.down = function(knex) {
-  
-};
+exports.down = async (knex) => {};
