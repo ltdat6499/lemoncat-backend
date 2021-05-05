@@ -1,143 +1,162 @@
-const express = require("express");
-const axios = require("axios").default;
-const app = express();
-const path = require("path");
-const session = require("express-session");
-const flash = require("connect-flash");
 const passport = require("passport");
-const connectEnsureLogin = require("connect-ensure-login");
 const LocalStrategy = require("passport-local").Strategy;
 const FacebookStrategy = require("passport-facebook").Strategy;
+const GoogleStrategy = require("passport-google-oauth").OAuth2Strategy;
 
-const jwt = require("../jwt");
+const flickr = require("../../plugins/flickr");
 const config = require("../../configs");
-const users = require("../../controllers/users");
 const tools = require("../../global");
-const fs = require("fs");
-passport.use(
-  new LocalStrategy(
-    {
-      usernameField: "email",
-      passwordField: "password",
-      passReqToCallback: true,
-      session: false,
-    },
-    async (req, email, password, done) => {
-      const user = tools._.head(await users.getByParams({ email }));
-      if (!user) return done(null, false, { message: "Incorrect email." });
-      const passwordVerify = await tools.checkPassword(password, user.password);
-      if (!passwordVerify)
-        return done(null, false, { message: "Incorrect password." });
+const controller = require("../../controllers");
+const jwt = require("../jwt");
+
+const sleep = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const local = new LocalStrategy(
+  {
+    usernameField: "email",
+    passwordField: "password",
+    passReqToCallback: true,
+    session: false,
+  },
+  async (req, email, password, done) => {
+    const user = tools._.head(await controller.users.getByParams({ email }));
+    if (!user) return done(null, false, { message: "Incorrect email." });
+    const passwordVerify = await tools.checkPassword(password, user.password);
+    if (!passwordVerify)
+      return done(null, false, { message: "Incorrect password." });
+    return done(null, jwt.sign({ id: user.id }, config.signatureKey));
+  }
+);
+
+const google = new GoogleStrategy(
+  {
+    clientID: config.google.clientID,
+    clientSecret: config.google.clientSecret,
+    callbackURL: config.google.callbackURL,
+    session: false,
+  },
+  async (token, tokenSecret, profile, done) => {
+    if (token && profile) {
+      let user = tools._.head(
+        await controller.users.getByParams({ email: profile._json.email })
+      );
+      if (!user) {
+        const id = tools.genId();
+        await sleep(500);
+        await controller.users.create({
+          id,
+          name: profile.displayName,
+          email: profile._json.email,
+          image: JSON.stringify({
+            id: tools.genId(),
+            src: profile._json.picture,
+          }),
+          status: true,
+          elo: {},
+          otp: {},
+          login_data: JSON.stringify({
+            ...profile._json,
+            token,
+          }),
+        });
+      }
       return done(null, jwt.sign({ id: user.id }, config.signatureKey));
     }
-  )
+    return done("login error");
+  }
+);
+const facebook = new FacebookStrategy(
+  {
+    clientID: config.facebook.clientID,
+    clientSecret: config.facebook.clientSecret,
+    callbackURL: config.facebook.callbackURL,
+    session: false,
+    profileFields: ["id", "email", "link", "name"],
+  },
+  async (accessToken, refreshToken, profile, done) => {
+    if (accessToken && profile) {
+      let user = tools._.head(
+        await controller.users.getByParams({ email: profile._json.email })
+      );
+      if (!user) {
+        const id = tools.genId();
+        const path = __dirname + `/../../downloads/${profile._json.id}.jpeg`;
+        user = await tools.download(
+          `https://graph.facebook.com/${profile._json.id}/picture?type=large&access_token=${accessToken}`,
+          path,
+          async () => {
+            const avataInfo = await flickr.upload(`${profile._json.id}.jpeg`);
+            await tools.deleteFile(path);
+            if (avataInfo) {
+              return await controller.users.create({
+                id,
+                name: profile._json.first_name + " " + profile._json.last_name,
+                email: profile._json.email,
+                image: JSON.stringify(avataInfo),
+                status: true,
+                elo: {},
+                otp: {},
+                login_data: JSON.stringify({
+                  ...profile._json,
+                  accessToken,
+                }),
+              });
+            }
+          }
+        );
+      }
+      return done(null, jwt.sign({ id: user.id }, config.signatureKey));
+    }
+    return done("login error");
+  }
 );
 
-const fetchData = async (url) => {
-  try {
-    const response = await axios({
-      url,
-      timeout: 10000,
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    // console.log("Axios error");
-  }
+const serialize = (token, done) => {
+  done(null, token);
 };
 
-passport.use(
-  new FacebookStrategy(
-    {
-      clientID: config.facebook.clientID,
-      clientSecret: config.facebook.clientSecret,
-      callbackURL: config.facebook.callbackURL,
-      session: false,
-      profileFields: ["id", "email", "link", "name"],
-    },
-    async (accessToken, refreshToken, profile, done) => {
-      if (accessToken && profile) {
-        console.log(profile._json);
-        const user = tools._.head(
-          await users.getByParams({ email: profile._json.email })
-        );
-        if (!user) {
-          const id = tools.genId();
-          await tools.download(
-            `https://graph.facebook.com/${profile._json.id}/picture?type=large&access_token=${accessToken}`,
-            __dirname + `/../../downloads/${profile._json.id}.jpeg`,
-            () => {
-              console.log("✅ Done!");
-            }
-          );
-
-          // const [result] = await users.create({
-          //   id,
-          // });
-        }
-      }
-      return done(null, profile);
-    }
-  )
-);
-
-passport.serializeUser((token, done) => {
-  done(null, token);
-});
-
-passport.deserializeUser(async (token, done) => {
+const deserialize = async (token, done) => {
   try {
     const { data, err } = jwt.verify(token, config.signatureKey);
     if (err) return done(err);
-    const user = await users.getById(data.id);
-    console.log(token);
+    const user = await controller.users.getById(data.id);
     return done(null, user);
   } catch (err) {
     return done(err);
   }
-});
+};
 
-app.use(require("morgan")("combined"));
-app.use(
-  session({
-    secret: config.signatureKey,
-    resave: false,
-    saveUninitialized: false,
-  })
-);
-app.use(flash());
-app.use(passport.initialize());
-app.use(passport.session());
-
-const login = app.post("/login", (req, res, next) => {
-  passport.authenticate("local", {
-    successRedirect: "/",
-    successFlash: "Welcome!",
-    session: true,
-  });
-  return res.redirect("/");
-});
-
-const facebookAuth = app.get(
-  "/auth/facebook",
-  passport.authenticate("facebook", {
+const exportPassport = {
+  local: passport.authenticate("local", {
+    failureRedirect: "/login",
+    session: false,
+  }),
+  facebookAuth: passport.authenticate("facebook", {
     authType: "reauthenticate",
     scope: ["user_friends"],
-  })
-);
-
-const facebookCallback = app.get(
-  "/auth/facebook/callback",
-  passport.authenticate("facebook", {
-    successRedirect: "/",
+  }),
+  facebookCallback: passport.authenticate("facebook", {
     failureRedirect: "/login",
-  })
-);
+    session: false,
+  }),
+  googleAuth: passport.authenticate("google", {
+    scope: [
+      "https://www.googleapis.com/auth/userinfo.email",
+      "https://www.googleapis.com/auth/userinfo.profile",
+    ],
+  }),
+  googleCallback: passport.authenticate("google", {
+    failureRedirect: "/login",
+  }),
+};
 
 module.exports = {
-  login,
-  facebookAuth,
-  facebookCallback,
+  exportPassport,
+  setup: {
+    local,
+    facebook,
+    google,
+    serialize,
+    deserialize,
+  },
 };

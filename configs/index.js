@@ -4,4 +4,5 @@ module.exports = {
   ...require("./server"),
   ...require("./flickr"),
   ...require("./facebook"),
+  ...require("./google"),
 };

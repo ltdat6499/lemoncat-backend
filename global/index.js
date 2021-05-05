@@ -449,6 +449,16 @@ const download = (url, path, callback) => {
   });
 };
 
+const deleteFile = async (path) => {
+  fs.unlink(path, (err) => {
+    if (err) {
+      console.error(err);
+      return;
+    }
+    return true;
+  });
+};
+
 module.exports = {
   ...require("./seed-ids"),
   ...require("./password"),
@@ -460,5 +470,6 @@ module.exports = {
   categoriesList,
   deepClone,
   download,
+  deleteFile,
   _,
 };
