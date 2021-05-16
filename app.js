@@ -1,5 +1,6 @@
 const createError = require("http-errors");
 const express = require("express");
+const cors = require("cors");
 const path = require("path");
 const cookieParser = require("cookie-parser");
 const logger = require("morgan");
@@ -10,6 +11,7 @@ const passport = require("passport");
 const configs = require("./configs");
 const { setup, exportPassport } = require("./middlewares/").passports;
 
+app.use(cors());
 // session configuration
 app.use(
   session({
