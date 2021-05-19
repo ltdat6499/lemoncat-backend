@@ -147,6 +147,7 @@ const exportPassport = {
   }),
   googleCallback: passport.authenticate("google", {
     failureRedirect: "/login",
+    session: false,
   }),
 };
 

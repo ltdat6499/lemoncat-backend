@@ -43,6 +43,7 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.post("/login", exportPassport.local, (req, res) => res.send(req.user));
+app.get("/login", (req, res) => res.send("auth failed"));
 app.get("/auth/facebook", exportPassport.facebookAuth);
 app.get(
   "/auth/facebook/callback",
@@ -51,7 +52,7 @@ app.get(
 );
 app.get("/auth/google", exportPassport.googleAuth);
 app.get("/auth/google/callback", exportPassport.googleCallback, (req, res) =>
-  res.send(req.user)
+  res.redirect("http://localhost:3842/#/login?token=" + req.user)
 );
 
 app.use("/admin-graphql", router.admin);
