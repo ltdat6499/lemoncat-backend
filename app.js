@@ -48,7 +48,7 @@ app.get("/auth/facebook", exportPassport.facebookAuth);
 app.get(
   "/auth/facebook/callback",
   exportPassport.facebookCallback,
-  (req, res) => res.send(req.user)
+  (req, res) => res.redirect("http://localhost:3842/#/login?token=" + req.user)
 );
 app.get("/auth/google", exportPassport.googleAuth);
 app.get("/auth/google/callback", exportPassport.googleCallback, (req, res) =>
