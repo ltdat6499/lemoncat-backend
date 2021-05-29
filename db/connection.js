@@ -1,5 +1,4 @@
-
-const config = require("../configs/index");
+const config = require("../configs");
 
 module.exports = require("knex")({
   client: config.client,

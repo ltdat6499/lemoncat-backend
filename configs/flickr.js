@@ -1,4 +1,4 @@
-require("dotenv").config({ path: "../.env" });
+require("dotenv").config();
 module.exports = {
   flickr: {
     consumerKey: process.env.FLICKR_CONSUMER_KEY,

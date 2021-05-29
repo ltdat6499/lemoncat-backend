@@ -1,19 +1,19 @@
-const config = require("../configs/index");
+const config = require("../configs");
 var options = {
   development: {
-    client: config.client,
+    client: config.client || "pg",
     connection: {
-      host: config.host,
-      user: config.user,
-      password: config.password,
-      database: config.database,
+      host: config.host || "127.0.0.1",
+      user: config.user || "docker",
+      password: config.password || "docker",
+      database: config.database || "lemoncat",
       charset: "utf8",
     },
     migrations: {
-      directory: __dirname + config.migration,
+      directory: __dirname + (config.migration || "/db/migrations"),
     },
     seeds: {
-      directory: __dirname + config.seed,
+      directory: __dirname + (config.seed || "/db/seeds"),
     },
   },
 };
