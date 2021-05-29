@@ -12,7 +12,7 @@ exports.seed = async (knex) => {
         id: tools.genFakeId(),
         src: tools.genAvatar(),
       },
-      token: "",
+      login_data: "",
       status: !!tools.getRandomBetween(-1, 2),
       role: tools.getRandomBetween(-1, 2) === true ? "s-user" : "user",
       elo: {},
