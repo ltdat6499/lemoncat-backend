@@ -37,13 +37,13 @@ const google = new GoogleStrategy(
   },
   async (token, tokenSecret, profile, done) => {
     if (token && profile) {
-      let user = tools._.head(
-        await controller.users.getByParams({ email: profile._json.email })
-      );
-      if (!user) {
+      let user = await controller.users.getByParams({
+        email: profile._json.email,
+      });
+      if (user.length <= 0) {
         const id = tools.genId();
         await sleep(500);
-        await controller.users.create({
+        user = await controller.users.create({
           id,
           name: profile.displayName,
           email: profile._json.email,
@@ -59,6 +59,8 @@ const google = new GoogleStrategy(
             token,
           }),
         });
+      } else {
+        user = tools._.head(user);
       }
       return done(null, jwt.sign({ id: user.id }, config.signatureKey));
     }
@@ -75,20 +77,20 @@ const facebook = new FacebookStrategy(
   },
   async (accessToken, refreshToken, profile, done) => {
     if (accessToken && profile) {
-      let user = tools._.head(
-        await controller.users.getByParams({ email: profile._json.email })
-      );
-      if (!user) {
+      let user = await controller.users.getByParams({
+        email: profile._json.email,
+      });
+      if (user.length <= 0) {
         const id = tools.genId();
         const path = __dirname + `/../../downloads/${profile._json.id}.jpeg`;
-        user = await tools.download(
+        await tools.download(
           `https://graph.facebook.com/${profile._json.id}/picture?type=large&access_token=${accessToken}`,
           path,
           async () => {
             const avataInfo = await flickr.upload(`${profile._json.id}.jpeg`);
             await tools.deleteFile(path);
             if (avataInfo) {
-              return await controller.users.create({
+              user = await controller.users.create({
                 id,
                 name: profile._json.first_name + " " + profile._json.last_name,
                 email: profile._json.email,
@@ -104,6 +106,8 @@ const facebook = new FacebookStrategy(
             }
           }
         );
+      } else {
+        user = tools._.head(user);
       }
       return done(null, jwt.sign({ id: user.id }, config.signatureKey));
     }
