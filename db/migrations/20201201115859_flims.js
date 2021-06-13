@@ -3,16 +3,17 @@ exports.up = async (knex) => {
     CREATE TABLE movies 
     (
       id TEXT PRIMARY KEY,
-      name TEXT,
-      summary TEXT,
-      rating TEXT DEFAULT 'PG-13',
-      genres TEXT[],
-      on_screen DATE,
-      images JSON[],
+      type TEXT DEFAULT 'movie',
+      info JSON,
+      photos TEXT[],
+      crews JSON[],
+      quotes JSON[],
+      streamings TEXT[],
+      knows JSON[],
+      data JSON[],
       lemon_score INT DEFAULT 0,
       user_score INT DEFAULT 0,
       status BOOL DEFAULT TRUE,
-      hot BOOL DEFAULT FALSE,      
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )

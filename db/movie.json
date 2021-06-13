@@ -1,0 +1,68 @@
+{
+	"id": "",
+	"type": "movie",
+	"info": {
+		"name": "String (UpperCase required)",
+		"trailer": "link embled yt",
+		"ratingPermission": "String (R, PG, ... required)",
+		"summary": "In 1970, paranormal investigators and demonologists Lorraine (Vera Farmiga) and Ed (Patrick Wilson) Warren are summoned to the home of Carolyn (Lili Taylor) and Roger (Ron Livingston) Perron. The Perrons and their five daughters have recently moved into a secluded farmhouse, where a supernatural presence has made itself known. Though the manifestations are relatively benign at first, events soon escalate in horrifying fashion, especially after the Warrens discover the house's macabre history.",
+		"genres": [
+			"Horror",
+			"Mystery & thriller"
+		],
+		"originalLanguage": "English",
+		"theatersDate": "Jul 19, 2013",
+		"streamingDate": "Jul 19, 2013",
+		"boxOffice": "$137.4M",
+		"productions": [
+			"Safran Company",
+			"Evergreen Media Group"
+		],
+		"soundMixs": [
+			"SDDS",
+			"Dolby Digital",
+			"Datasat"
+		],
+		"aspectRatio": "Scope (2.35:1)",
+		"collection": "The Conjuring Universe",
+		"runtime": "1h 51m required",
+		"poster": "http://localhost:3842/static/img/sample-poster.06fa1ae.png",
+		"tags": [
+			"zombie",
+			"apocalyse"
+		]
+	},
+	"whatToKnows": [
+		{
+			"title": "String",
+			"content": "String"
+		}
+	],
+	"streamings": [
+		"Netfix",
+		"Disney +"
+	],
+	"photos": [
+		"link",
+		"link"
+	],
+	"crews": [
+		{
+			"personName": "",
+			"personId": "",
+			"castName": "giam doc san xuat || Tony Stark || bien kich"
+		}
+	],
+	"quotes": [
+		{
+			"name": "",
+			"content": ""
+		}
+	],
+	"postIds": [
+		"1",
+		"2",
+		"3",
+		"..."
+	]
+}

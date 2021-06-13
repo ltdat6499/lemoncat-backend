@@ -3,8 +3,8 @@ exports.up = async (knex) => {
     CREATE TABLE comments
     (
       id TEXT PRIMARY KEY,
-      parent TEXT,
       parent_type TEXT,
+      parent TEXT,
       uid TEXT,
       interact TEXT,
       content TEXT,

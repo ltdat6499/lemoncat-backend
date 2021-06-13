@@ -3,14 +3,13 @@ exports.up = async (knex) => {
     CREATE TABLE posts 
     (
       id TEXT PRIMARY KEY,
+      type TEXT DEFAULT 'review',
       uid TEXT NOT NULL,
       title TEXT,
       content TEXT,
-      content_html TEXT,
+      data JSON,
       tags TEXT[],
-      score INT DEFAULT 50,
       interact TEXT,
-      category TEXT DEFAULT 'Review',
       status BOOL DEFAULT TRUE,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()

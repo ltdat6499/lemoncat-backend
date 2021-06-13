@@ -1,5 +1,5 @@
 const tools = require("../../global/");
-const { content, contentHtml } = tools.genContent();
+const { content } = tools.genContent();
 
 exports.seed = async (knex) => {
   const list = [];
@@ -9,7 +9,6 @@ exports.seed = async (knex) => {
       uid: tools.userIds[tools.getRandomBetween(-1, 100)],
       title: tools.genTitle(),
       content,
-      content_html: contentHtml,
       tags: tools.genTags(10),
     });
   }

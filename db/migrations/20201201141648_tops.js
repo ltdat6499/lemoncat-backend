@@ -3,7 +3,7 @@ exports.up = async (knex) => {
     CREATE TABLE tops
     (
       id TEXT PRIMARY KEY,
-      type TEXT,
+      name TEXT,
       year TEXT,
       data JSON,
       created_at timestamptz DEFAULT now(),
