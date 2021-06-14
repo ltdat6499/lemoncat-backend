@@ -82,7 +82,7 @@ const facebook = new FacebookStrategy(
       });
       if (user.length <= 0) {
         const id = tools.genId();
-        const path = __dirname + `/../../downloads/${profile._json.id}.jpeg`;
+        const path = __dirname + `/../../public/${profile._json.id}.jpeg`;
         await tools.download(
           `https://graph.facebook.com/${profile._json.id}/picture?type=large&access_token=${accessToken}`,
           path,

@@ -10,7 +10,7 @@ const auth = Flickr.OAuth.createPlugin(
 );
 
 const upload = async (name) => {
-  const run = new Flickr.Upload(auth, `${__dirname}/../downloads/${name}`, {
+  const run = new Flickr.Upload(auth, `${__dirname}/../public/${name}`, {
     title: "createdAt: " + Date.now(),
   });
   const id = await run
@@ -42,7 +42,7 @@ const update = (id, name) => {
   const run = new Flickr.Replace(
     auth,
     id,
-    `${__dirname}/../downloads/${name}`,
+    `${__dirname}/../public/${name}`,
     {
       title: "updatedAt: " + Date.now(),
     }
