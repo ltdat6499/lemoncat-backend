@@ -8,8 +8,9 @@ exports.up = async (knex) => {
       title TEXT,
       content TEXT,
       data JSON,
+      network_data JSON[],
       tags TEXT[],
-      interact TEXT,
+      interacts JSON[],
       status BOOL DEFAULT TRUE,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()

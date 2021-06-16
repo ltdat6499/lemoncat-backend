@@ -13,9 +13,9 @@ exports.up = async (knex) => {
     FOR EACH ROW
     EXECUTE PROCEDURE trigger_set_timestamp()`);
 
-  await knex.raw(`CREATE TRIGGER movies_updated
+  await knex.raw(`CREATE TRIGGER flims_updated
     BEFORE UPDATE
-    ON movies
+    ON flims
     FOR EACH ROW
     EXECUTE PROCEDURE trigger_set_timestamp()`);
 
@@ -37,12 +37,6 @@ exports.up = async (knex) => {
     FOR EACH ROW
     EXECUTE PROCEDURE trigger_set_timestamp()`);
 
-  await knex.raw(`CREATE TRIGGER productions_updated
-    BEFORE UPDATE
-    ON productions
-    FOR EACH ROW
-    EXECUTE PROCEDURE trigger_set_timestamp()`);
-
   await knex.raw(`CREATE TRIGGER comments_updated
     BEFORE UPDATE
     ON comments
@@ -58,11 +52,10 @@ exports.up = async (knex) => {
 
 exports.down = async (knex) => {
   await knex.raw(`drop TRIGGER users_updated ON users`);
-  await knex.raw(`drop TRIGGER movies_updated ON movies`);
+  await knex.raw(`drop TRIGGER flims_updated ON flims`);
   await knex.raw(`drop TRIGGER persons_updated ON persons`);
   await knex.raw(`drop TRIGGER posts_updated ON posts`);
   await knex.raw(`drop TRIGGER categories_updated ON categories`);
-  await knex.raw(`drop TRIGGER productions_updated ON productions`);
   await knex.raw(`drop TRIGGER comments_updated ON comments`);
   await knex.raw(`drop TRIGGER tops_updated ON tops`);
 };
