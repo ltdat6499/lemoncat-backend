@@ -2,10 +2,10 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE comments
     (
-      id TEXT PRIMARY KEY,
+      id BIGINT NOT NULL DEFAULT lemoncat.next_id(),
       parent_type TEXT,
-      parent TEXT,
-      uid TEXT,
+      parent BIGINT,
+      uid BIGINT,
       interact TEXT,
       content TEXT,
       created_at timestamptz DEFAULT now(),

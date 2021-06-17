@@ -2,7 +2,7 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE tops
     (
-      id TEXT PRIMARY KEY,
+      id BIGINT NOT NULL DEFAULT lemoncat.next_id(),
       name TEXT,
       year TEXT,
       data JSON,

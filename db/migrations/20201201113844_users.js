@@ -2,7 +2,7 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE users 
     (
-      id TEXT PRIMARY KEY,
+      id BIGINT NOT NULL DEFAULT lemoncat.next_id(),
       email TEXT NOT NULL UNIQUE,
       password TEXT,
       name TEXT,
@@ -12,6 +12,7 @@ exports.up = async (knex) => {
       role TEXT DEFAULT 'user',
       elo JSON DEFAULT NULL,
       otp TEXT DEFAULT NULL,
+      slug TEXT,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )

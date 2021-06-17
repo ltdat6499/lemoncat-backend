@@ -2,15 +2,16 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE posts 
     (
-      id TEXT PRIMARY KEY,
+      id BIGINT NOT NULL DEFAULT lemoncat.next_id(),
       type TEXT DEFAULT 'review',
-      uid TEXT NOT NULL,
+      uid BIGINT NOT NULL,
       title TEXT,
       content TEXT,
       data JSON,
-      network_data JSON[],
+      crawl_data JSON[],
       tags TEXT[],
       interacts JSON[],
+      slug TEXT,
       status BOOL DEFAULT TRUE,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
