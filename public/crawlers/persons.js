@@ -123,8 +123,13 @@ const getBirth = async ($) => {
       .trim()
       .replace("Birthday:\n", "")
       .trim() || "";
-  if (result.length) return moment(result).format().toString();
-  return null;
+  try {
+    if (result.length && result !== "Not Available")
+      return moment(result).format().toString();
+    return "1978-12-27";
+  } catch (error) {
+    return "1978-12-27";
+  }
 };
 
 const getBirthPlace = async ($) => {
@@ -240,7 +245,7 @@ const getPersons = async (url, $) => {
 };
 
 const loadArray = async () => {
-  const file = fs.createReadStream("persons.txt");
+  const file = fs.createReadStream("persons-uniq.txt");
 
   const readLine = readline.createInterface({
     input: file,
@@ -275,6 +280,9 @@ const crawler = async () => {
     if (data) {
       const [result] = await controller.create(data);
       console.log(result.id);
+    } else {
+      await fs.appendFileSync("errors.txt", link + "\n", "utf8");
+      console.log("Error: " + link);
     }
   }
 };
