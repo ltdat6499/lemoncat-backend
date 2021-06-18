@@ -1,6 +1,5 @@
 const fs = require("fs");
 const readline = require("readline");
-const axios = require("axios");
 const cheerio = require("cheerio");
 const controller = require("../../controllers/persons");
 const moment = require("moment");
@@ -72,42 +71,16 @@ const best_rated2 = [
   "div[class='posters-container']",
   "tile-poster-video > a",
 ];
-const join_flims = {
-  url: [
-    "div[class='container roma-layout__body']",
-    "main[id='main_container']",
-    "div[id='main-page-content']",
-    "div[class='layout celebrity']",
-    "article[class='layout__column layout__column--main']",
-    "section[class='celebrity-filmography'] > div",
-    "div[class='scroll-x'] > table > tbody > tr",
-    "td[class='celebrity-filmography__title'] > a",
-  ],
-  role: [
-    "div[class='container roma-layout__body']",
-    "main[id='main_container']",
-    "div[id='main-page-content']",
-    "div[class='layout celebrity']",
-    "article[class='layout__column layout__column--main']",
-    "section[class='celebrity-filmography'] > div",
-    "div[class='scroll-x'] > table > tbody > tr",
-    "td[class='celebrity-filmography__credits']",
-  ],
-};
-const base_relative_news = [
+const relative_news = [
   "div[class='container roma-layout__body']",
   "main[id='main_container']",
   "div[id='main-page-content']",
   "div[class='layout celebrity']",
   "aside[class='layout__column layout__column--sidebar layout__column--sidebar-right mobile-hidden']",
   "section[class='celebrity-news']",
-  "div > ol > li",
+  "div > ol[class='celebrity-news-list']",
+  "li[class='celebrity-news-list__item'] > a",
 ];
-const relative_news = {
-  url: base_relative_news.concat(["a"]),
-  image: base_relative_news.concat(["a > div"]),
-  title: base_relative_news.concat(["a > p"]),
-};
 const images = [
   "div[class='container roma-layout__body']",
   "main[id='main_container']",
@@ -119,26 +92,6 @@ const images = [
   "div > ul > div > div > li > button",
 ];
 
-const fetchData = async (url) => {
-  try {
-    let response;
-    response = await axios({
-      url,
-      timeout: 8000,
-      maxRedirects: 1000,
-      validateStatus: function (status) {
-        return status === 200; // default
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    return response.data;
-  } catch (error) {
-    // console.log("Axios error");
-  }
-};
-
 const skeleton = {
   name: "",
   birth: "",
@@ -149,7 +102,6 @@ const skeleton = {
   crawl_data: {
     url: "",
     best_rated: [],
-    join_flims: [],
     relative_news: [],
     rated: {
       highest: "",
@@ -187,20 +139,76 @@ const getBirthPlace = async ($) => {
 };
 
 const getSummary = async ($) => {
-  const result = $("body").find(summary.join(" > ")).text().trim();
+  const result = $("body").find(summary.join(" > ")).text().trim() || "";
   return result;
 };
 
 const getFirstImage = async ($) => {
   const result =
-    $("body").find(first_image.join(" > ")).attr("src").trim() || null;
+    $("body").find(first_image.join(" > ")).attr("src").trim() || "";
   return result;
 };
 
 const getImages = async ($) => {
+  const results = [];
+  $("body")
+    .find(images.join(" > "))
+    .each((i, el) => {
+      results.push($(el).attr("data-photo-id").trim());
+    });
+  return results;
+};
+
+const getBestRated = async ($) => {
+  const results = [];
+
+  $("body")
+    .find(best_rated1.join(" > "))
+    .each((i, el) => {
+      results.push(
+        "https://www.rottentomatoes.com" + $(el).attr("href").trim()
+      );
+    });
+  $("body")
+    .find(best_rated2.join(" > "))
+    .each((i, el) => {
+      results.push(
+        "https://www.rottentomatoes.com" + $(el).attr("href").trim()
+      );
+    });
+  return results;
+};
+
+const getHighestRated = async ($) => {
   const result =
-    $("body").find(images.join(" > ")).attr("data-photo-id").trim() || null;
+    "https://www.rottentomatoes.com" +
+    $("body").find(highestRated.join(" > ")).attr("href").trim();
   return result;
+};
+
+const getLowestRated = async ($) => {
+  const result =
+    "https://www.rottentomatoes.com" +
+    $("body").find(lowestRated.join(" > ")).attr("href").trim();
+  return result;
+};
+
+const getRelativeNews = async ($) => {
+  const results = [];
+  $("body")
+    .find(relative_news.join(" > "))
+    .each((i, el) => {
+      const url = $(el).attr("href").trim();
+      const title = $(el)
+        .html()
+        .replace(/(<([^>]+)>)/gi, "")
+        .trim();
+      results.push({
+        url,
+        title,
+      });
+    });
+  return results;
 };
 
 const getPersons = async (url, $) => {
@@ -212,94 +220,63 @@ const getPersons = async (url, $) => {
     result.born_in = await getBirthPlace($);
     result.summary = await getSummary($);
     result.images.push(await getFirstImage($));
-    result.images.push(await getImages($));
+    result.images = result.images.concat(await getImages($));
+    result.crawl_data.url = url;
+    result.crawl_data.best_rated = result.crawl_data.best_rated.concat(
+      await getBestRated($)
+    );
+
+    result.crawl_data.relative_news = result.crawl_data.relative_news.concat(
+      await getRelativeNews($)
+    );
+    result.crawl_data.rated.highest = await getHighestRated($);
+    result.crawl_data.rated.lowest = await getLowestRated($);
     return result;
-  } catch (error) {}
+  } catch (error) {
+    console.log("ERRORRRRR");
+    console.log(error);
+    console.log("ERRORRRRR");
+  }
 };
 
-// processLineByLine();
-const scrollBottom = () => {
-  var count = arguments[arguments.length - 2] || 0x7fffffff;
-  var callback = arguments[arguments.length - 1];
+const loadArray = async () => {
+  const file = fs.createReadStream("persons.txt");
 
-  /* get the scrollable container */
-  var elm = document.elementFromPoint(
-    window.innerWidth - 25,
-    window.innerHeight / 2
-  );
-  for (; elm && (++elm.scrollTop, !elm.scrollTop); elm = elm.parentElement);
-  elm = elm || document.documentElement;
-
-  /* hook XMLHttpRequest to monitor Ajax requests */
-  if (!("idle" in XMLHttpRequest))
-    (function () {
-      var n = 0,
-        t = Date.now(),
-        send = XMLHttpRequest.prototype.send;
-      var dispose = function () {
-        --n;
-        t = Date.now();
-      };
-      var loadend = function () {
-        setTimeout(dispose, 1);
-      };
-      XMLHttpRequest.idle = function () {
-        return n > 0 ? 0 : Date.now() - t;
-      };
-      XMLHttpRequest.prototype.send = function () {
-        ++n;
-        this.addEventListener("loadend", loadend);
-        send.apply(this, arguments);
-      };
-    })();
-
-  /* scroll until steady scrollHeight or count of scroll and no pending request */
-  var i = 0,
-    scrollHeight = -1,
-    scrollTop = -1;
-  (function scroll() {
-    if (
-      (scrollHeight === elm.scrollHeight || i === count) &&
-      XMLHttpRequest.idle() > 60
-    )
-      return callback(i);
-    scrollTop = elm.scrollTop;
-    scrollHeight = elm.scrollHeight;
-    if (i < count)
-      i += ((elm.scrollTop = 0x7fffffff), scrollTop !== elm.scrollTop);
-    setTimeout(scroll, 100);
-  })();
+  const readLine = readline.createInterface({
+    input: file,
+    crlfDelay: Infinity,
+  });
+  const results = [];
+  for await (const line of readLine) {
+    results.push(line);
+  }
+  return results;
 };
-
-// const processLineByLine = async () => {
-//   const file = fs.createReadStream("persons.txt");
-
-//   const readLine = readline.createInterface({
-//     input: file,
-//     crlfDelay: Infinity,
-//   });
-
-//   for await (const line of readLine) {
-//   }
-// };
-
-// processLineByLine();
 
 const { Builder, until } = require("selenium-webdriver");
-let driver = new Builder()
-  .forBrowser("firefox")
-  .usingServer("http://localhost:4444/wd/hub")
-  .build();
-driver
-  .get("https://www.rottentomatoes.com/celebrity/anne_baxter")
-  .then(() =>
-    driver.executeScript("window.scrollTo(0, document.body.scrollHeight);")
-  )
-  .then(() => driver.getPageSource())
-  .then(async (source) => {
-    const $ = cheerio.load(source);
-    await getPersons("https://www.rottentomatoes.com/celebrity/anne_baxter", $);
-  })
-  .then(() => {
-    driver.quit();
-  });
+const fetchData = async (url) => {
+  let driver = new Builder()
+    .forBrowser("firefox")
+    .usingServer("http://localhost:4444/wd/hub")
+    .build();
+  await driver.get(url);
+  await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+  const result = await driver.getPageSource();
+  await driver.quit();
+  return cheerio.load(result);
+};
+
+const crawler = async () => {
+  const links = await loadArray();
+
+  for (const link of links) {
+    const $ = await fetchData(link);
+    const data = await getPersons(link, $);
+    if (data) {
+      const [result] = await controller.create(data);
+      console.log(result.id);
+    }
+  }
+};
+
+crawler();
