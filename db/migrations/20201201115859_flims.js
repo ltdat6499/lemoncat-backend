@@ -10,7 +10,7 @@ exports.up = async (knex) => {
       photos TEXT[],
       crews jsonb[],
       quotes jsonb[],
-      data jsonb[],
+      data jsonb,
       lemon_score INT DEFAULT 0,
       user_score INT DEFAULT 0,
       status BOOL DEFAULT TRUE,

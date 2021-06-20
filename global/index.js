@@ -412,12 +412,7 @@ const categoriesList = [
     name: "best documentary short",
     type: "winner categories",
   },
-].map((item) => {
-  item.id = require("./seed-ids/index").randomIds[
-    Math.floor(Math.random() * 115000)
-  ];
-  return item;
-});
+];
 
 const getRandomBetween = (min, max) => {
   const result = Math.floor(min + 1 + Math.random() * Math.floor(max));
@@ -460,7 +455,6 @@ const deleteFile = async (path) => {
 };
 
 module.exports = {
-  ...require("./seed-ids"),
   ...require("./password"),
   ...require("./gen-id.js"),
   ...require("./faker"),

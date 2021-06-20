@@ -1,0 +1,8 @@
+docker run -d --name selenium-hub1 -p 4444:4444 selenium/hub
+docker run -d -P --link selenium-hub1:hub selenium/node-firefox
+
+docker run -d --name selenium-hub2 -p 4443:4444 selenium/hub
+docker run -d -P --link selenium-hub2:hub selenium/node-firefox
+
+docker run -d --name selenium-hub3 -p 4442:4444 selenium/hub
+docker run -d -P --link selenium-hub3:hub selenium/node-firefox
