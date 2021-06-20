@@ -3,7 +3,7 @@ const axios = require("axios");
 const readline = require("readline");
 const cheerio = require("cheerio");
 const moment = require("moment");
-
+const flims = require("../../controllers/flims");
 const detachMovieInfoList = (data) => {
   const result = {};
   for (const item of data) {
@@ -52,7 +52,6 @@ const fetchData = async (url) => {
     console.log(">>>>>>>>>>");
   }
 };
-//https://www.rottentomatoes.com/m/avengers_endgame/reviews?type=top_critics&sort=&page=
 const base = [
   "div[class='body_main container']",
   "div[id='main_container']",
@@ -204,47 +203,52 @@ const critics = async (url, type) => {
               ].join(" > ")
             )
             .attr("src");
-          result.name = $(el)
-            .find(
-              [
-                "div[class='col-xs-8 critic-info']",
-                "div[class='col-sm-17 col-xs-32 critic_name']",
-                "a[class='unstyled bold articleLink']",
-              ].join(" > ")
-            )
-            .text()
-            .trim();
-          result.working = $(el)
-            .find(
-              [
-                "div[class='col-xs-8 critic-info']",
-                "div[class='col-sm-17 col-xs-32 critic_name']",
-                "a > em[class='subtle critic-publication']",
-              ].join(" > ")
-            )
-            .text()
-            .trim();
-          result.content = $(el)
-            .find(
-              [
-                "div[class='col-xs-16 review_container']",
-                "div[class='review_area']",
-                "div[class='review_desc']",
-                "div[class='the_review']",
-              ].join(" > ")
-            )
-            .text()
-            .trim();
-          result.date = $(el)
-            .find(
-              [
-                "div[class='col-xs-16 review_container']",
-                "div[class='review_area']",
-                "div[class='review-date subtle small']",
-              ].join(" > ")
-            )
-            .text()
-            .trim();
+          result.name = (
+            $(el)
+              .find(
+                [
+                  "div[class='col-xs-8 critic-info']",
+                  "div[class='col-sm-17 col-xs-32 critic_name']",
+                  "a[class='unstyled bold articleLink']",
+                ].join(" > ")
+              )
+              .text() || "No Name"
+          ).trim();
+          result.working = (
+            $(el)
+              .find(
+                [
+                  "div[class='col-xs-8 critic-info']",
+                  "div[class='col-sm-17 col-xs-32 critic_name']",
+                  "a > em[class='subtle critic-publication']",
+                ].join(" > ")
+              )
+              .text() || "No News"
+          ).trim();
+          result.content = (
+            $(el)
+              .find(
+                [
+                  "div[class='col-xs-16 review_container']",
+                  "div[class='review_area']",
+                  "div[class='review_desc']",
+                  "div[class='the_review']",
+                ].join(" > ")
+              )
+              .text() ||
+            "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+          ).trim();
+          result.date = (
+            $(el)
+              .find(
+                [
+                  "div[class='col-xs-16 review_container']",
+                  "div[class='review_area']",
+                  "div[class='review-date subtle small']",
+                ].join(" > ")
+              )
+              .text() || "April 14, 2021"
+          ).trim();
           result.url = $(el)
             .find(
               [
@@ -255,16 +259,18 @@ const critics = async (url, type) => {
               ].join(" > ")
             )
             .attr("href");
-          result.score = $(el)
-            .find(
-              [
-                "div[class='col-xs-16 review_container']",
-                "div[class='review_area']",
-                "div[class='review_desc']",
-                "div[class='small subtle review-link']",
-              ].join(" > ")
-            )
-            .text()
+          result.score = (
+            $(el)
+              .find(
+                [
+                  "div[class='col-xs-16 review_container']",
+                  "div[class='review_area']",
+                  "div[class='review_desc']",
+                  "div[class='small subtle review-link']",
+                ].join(" > ")
+              )
+              .text() || "Full Review | Original Score: 5/10"
+          )
             .trim()
             .replace(/\s\s+/g, " ");
           if (result.score.length > 14)
@@ -340,15 +346,24 @@ const crawl = async (url) => {
     const $ = cheerio.load(data);
     const result = deepClone(skeleton);
 
-    result.info.name = $("body").find(path.name.join(" > ")).text().trim();
-    result.info.rating = $("body")
+    result.crawl_data.audience_state = $("body")
       .find(path.rating.join(" > "))
-      .attr("rating")
-      .trim();
-    result.info.summary = $("body")
-      .find(path.summary.join(" > "))
-      .text()
-      .trim();
+      .attr("audiencestate");
+    result.crawl_data.audience_score = $("body")
+      .find(path.rating.join(" > "))
+      .attr("audiencescore");
+    result.crawl_data.tomatometer_state = $("body")
+      .find(path.rating.join(" > "))
+      .attr("tomatometerstate");
+    result.crawl_data.tomatometer_score = $("body")
+      .find(path.rating.join(" > "))
+      .attr("tomatometerscore");
+    result.info.name = $("body").find(path.name.join(" > ")).text().trim();
+    result.info.rating = $("body").find(path.rating.join(" > ")).attr("rating");
+    result.info.summary = (
+      $("body").find(path.summary.join(" > ")).text() ||
+      "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+    ).trim();
     const movieInfoList = [];
     $("body")
       .find(path.genres_runtime.join(" > "))
@@ -358,8 +373,7 @@ const crawl = async (url) => {
     result.info = { ...result.info, ...detachMovieInfoList(movieInfoList) };
     result.info.poster = $("body")
       .find(path.poster.join(" > "))
-      .attr("data-src")
-      .trim();
+      .attr("data-src");
     result.slug = url.replace("https://www.rottentomatoes.com/m/", "");
     $("body")
       .find(path.what_to_knows.join(" > "))
@@ -372,12 +386,12 @@ const crawl = async (url) => {
     $("body")
       .find(path.streamings.join(" > "))
       .each((i, el) => {
-        result.streamings.push($(el).attr("data-affiliate").trim());
+        result.streamings.push($(el).attr("data-affiliate"));
       });
     $("body")
       .find(path.photos.join(" > "))
       .each((i, el) => {
-        result.photos.push($(el).attr("data-src").trim());
+        result.photos.push($(el).attr("data-src"));
       });
     $("body")
       .find(path.crews.join(" > "))
@@ -393,16 +407,18 @@ const crawl = async (url) => {
           }
         }
       });
-    result.data.trailer_photo = $("body")
-      .find(trailerPhoto.join(" > "))
-      .attr("data-bg-srcset")
+    result.data.trailer_photo = (
+      $("body").find(trailerPhoto.join(" > ")).attr("data-bg-srcset") ||
+      "s, https://hips.hearstapps.com/hmg-prod.s3.amazonaws.com/images/best-movies-1614634680.jpg"
+    )
       .split(", ")
       .reverse()[0];
     $("body")
       .find(alsoLike.join(" > "))
       .each((i, el) => {
         result.data.also_like.push(
-          "https://www.rottentomatoes.com" + $(el).attr("href")
+          "https://www.rottentomatoes.com" +
+            ($(el).attr("href") || "/m/avengers_endgame")
         );
       });
     $("body")
@@ -410,15 +426,16 @@ const crawl = async (url) => {
       .each((i, el) => {
         result.data.news.push({
           url: $(el).attr("href"),
-          title: $(el).find("div[class='news-article-title']").text().trim(),
+          title: (
+            $(el).find("div[class='news-article-title']").text() || "No title"
+          ).trim(),
         });
       });
     result.data.reviews.top_critics = await critics(url, "top");
     result.data.reviews.critics = await critics(url, "all");
-    console.log(result);
     return result;
   } catch (err) {
-    return [];
+    console.log(err);
   }
 };
 
@@ -439,16 +456,15 @@ const loadArray = async () => {
 const run = async () => {
   const links = await loadArray();
   for (const url of links) {
-    const data = await crawl(url);
+    try {
+      const data = await crawl(url);
+      const transData = deepClone(data);
+      const result = await flims.create(transData);
+      console.log(result.id + ": " + url);
+    } catch (error) {
+      console.log(error);
+    }
   }
-  // for (let i = 1; i <= 1226; i++) {
-  //   const data = await crawl(baseUrl + i);
-  //   for (const item of data) {
-  //     item.content = await crawlContent(item.crawl_data.url);
-  //     await fs.appendFileSync("", JSON.stringify(item) + "," + "\n", "utf8");
-  //     console.log(item.crawl_data.url);
-  //   }
-  // }
 };
 
 run();

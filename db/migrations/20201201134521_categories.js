@@ -2,7 +2,7 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE categories 
     (
-      id BIGINT NOT NULL DEFAULT lemoncat.next_id(),
+      id BIGINT NOT NULL PRIMARY KEY DEFAULT lemoncat.next_id(),
       name TEXT DEFAULT '',
       description TEXT DEFAULT '',
       alias TEXT DEFAULT '',

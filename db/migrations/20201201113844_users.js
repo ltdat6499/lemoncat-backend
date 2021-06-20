@@ -2,7 +2,7 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE users 
     (
-      id BIGINT NOT NULL DEFAULT lemoncat.next_id(),
+      id BIGINT NOT NULL PRIMARY KEY DEFAULT lemoncat.next_id(),
       email TEXT NOT NULL UNIQUE,
       password TEXT,
       name TEXT,

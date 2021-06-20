@@ -2,10 +2,10 @@ exports.up = async (knex) => {
   await knex.raw(`
     CREATE TABLE tops
     (
-      id BIGINT NOT NULL DEFAULT lemoncat.next_id(),
+      id BIGINT NOT NULL PRIMARY KEY DEFAULT lemoncat.next_id(),
       name TEXT,
       year TEXT,
-      data JSON,
+      data jsonb,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )

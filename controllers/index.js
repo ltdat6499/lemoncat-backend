@@ -1,7 +1,7 @@
 module.exports = {
   users: require("./users"),
   comments: require("./comments"),
-  movies: require("./movies"),
+  flims: require("./flims"),
   categories: require("./categories"),
   persons: require("./persons"),
   posts: require("./posts"),
