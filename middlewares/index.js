@@ -1,1 +1,1 @@
-module.exports = { passports: require("./passports"), acl: require("./rbac") };
+module.exports = { passports: require("./passports") };

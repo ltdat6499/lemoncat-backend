@@ -6,7 +6,6 @@ module.exports = {
   categories: require("./categories"),
   persons: require("./persons"),
   posts: require("./posts"),
-  productions: require("./productions"),
   tops: require("./tops"),
   categories: require("./categories"),
 };
