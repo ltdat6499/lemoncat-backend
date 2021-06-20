@@ -1,4 +1,5 @@
 module.exports = {
+  knex: require("./knex"),
   users: require("./users"),
   comments: require("./comments"),
   flims: require("./flims"),
