@@ -3,12 +3,10 @@ const _ = require("lodash");
 const modules = [
   require("./users"),
   require("./comments"),
-  require("./movies"),
+  require("./flims"),
   require("./persons"),
   require("./posts"),
-  require("./productions"),
   require("./tops"),
-  require("./categories"),
 ];
 const resolvers = modules.reduce((list = {}, items) => _.merge(list, items));
 

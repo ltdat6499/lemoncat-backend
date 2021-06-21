@@ -52,7 +52,7 @@ type User {
   email: String
   password: String
   name: String
-  image: Image
+  image: String
   loginData: String
   status: Boolean
   role: String
@@ -66,7 +66,7 @@ input UserInput {
   email: String
   password: String
   name: String
-  image: ImageInput
+  image: String
   token: String
 }
 
@@ -89,21 +89,11 @@ input CommentInput {
   content: String
 }
 
-type Image {
-  id: String
-  src: String
-}
-
-input ImageInput {
-  id: String
-  src: String
-}
-
-type Movie {
+type Flim {
   id: String
   summary: String
   rating: String
-  images: [Image]
+  images: [String]
   genres: [String]
   onScreen: DateTime
   lemonScore: Int
@@ -114,10 +104,10 @@ type Movie {
   updatedAt: DateTime
 }
 
-input MovieInput {
+input FlimInput {
   summary: String
   rating: String
-  images: [ImageInput]
+  images: [String]
   genres: [String]
   onScreen: DateTime
   status: Boolean
@@ -130,7 +120,7 @@ type Person {
   birth: Date
   bornIn: String
   summary: String
-  images: [Image]
+  images: [String]
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -140,7 +130,7 @@ input PersonInput {
   birth: Date
   bornIn: String
   summary: String
-  images: [ImageInput]
+  images: [String]
 }
 
 type Post {
@@ -167,23 +157,6 @@ input PostInput {
   status: Boolean
 }
 
-type Production {
-  id: String
-  movie: String
-  person: String
-  type: String
-  character: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input ProductionInput {
-  movie: String
-  person: String
-  type: String
-  character: String
-}
-
 type Top {
   id: String
   type: String
@@ -199,40 +172,19 @@ input TopInput {
   data: JSON
 }
 
-type Category {
-  id: String
-  name: String
-  description: String
-  alias: String
-  type: String
-  createdAt: DateTime
-  updatedAt: DateTime
-}
-
-input CategoryInput {
-  name: String
-  description: String
-  alias: String
-  type: String
-}
-
 type Query {
   users: [User]
   user(id: String): User
   comments: [Comment]
   comment(id: String): Comment
-  movies: [Movie]
-  movie(id: String): Movie
+  flims: [Flim]
+  flim(id: String): Flim
   persons: [Person]
   person(id: String): Person
   posts: [Post]
   post(id: String): Post
-  productions: [Production]
-  production(id: String): Production
   tops: [Top]
   top(id: String): Top
-  categories: [Category]
-  category(id: String): Category
 }
 
 type Mutation {
@@ -242,24 +194,18 @@ type Mutation {
   createComment(input: CommentInput): Comment
   updateComment(id: String, input: CommentInput): Comment
   deleteComment(id: String): Boolean
-  createMovie(input: MovieInput): Movie
-  updateMovie(id: String, input: MovieInput): Movie
-  deleteMovie(id: String): Boolean
+  createFlim(input: FlimInput): Flim
+  updateFlim(id: String, input: FlimInput): Flim
+  deleteFlim(id: String): Boolean
   createPerson(input: PersonInput): Person
   updatePerson(id: String, input: PersonInput): Person
   deletePerson(id: String): Boolean
   createPost(input: PostInput): Post
   updatePost(id: String, input: PostInput): Post
   deletePost(id: String): Boolean
-  createProduction(input: ProductionInput): Production
-  updateProduction(id: String, input: ProductionInput): Production
-  deleteProduction(id: String): Boolean
   createTop(input: TopInput): Top
   updateTop(id: String, input: TopInput): Top
   deleteTop(id: String): Boolean
-  createCategory(input: TopInput): Category
-  updateCategory(id: String, input: CategoryInput): Category
-  deleteCategory(id: String): Boolean
 }
 
 schema {

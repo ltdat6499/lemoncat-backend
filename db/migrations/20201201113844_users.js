@@ -10,8 +10,7 @@ exports.up = async (knex) => {
       login_data JSON DEFAULT NULL,
       status BOOL DEFAULT true,
       role TEXT DEFAULT 'user',
-      elo JSON DEFAULT NULL,
-      otp TEXT DEFAULT NULL,
+      data jsonb,
       slug TEXT,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
