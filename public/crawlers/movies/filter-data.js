@@ -164,26 +164,125 @@ const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
 
 // getIds();
 
+// const restruct = async () => {
+//   let flimUrlResults = [];
+//   const flims = await knex("flims").select("crews");
+//   for (const item of flims) {
+//     flimUrlResults = [
+//       ...flimUrlResults,
+//       ...item.crews.map((item) => item.person),
+//     ];
+//   }
+//   flimUrlResults = _.uniq(flimUrlResults); //30085
+//   let personsUrlResults = [];
+//   const persons = await knex("persons").select("crawl_data");
+//   for (const item of persons) {
+//     personsUrlResults.push(item.crawl_data.url); //28923
+//   }
+//   const different = _.difference(flimUrlResults, personsUrlResults);
+//   for (const item of different) {
+//     await fs.appendFileSync("miss-link.txt", item + "\n", "utf8");
+//   }
+//   console.log("DONE");
+// };
+
+// const restruct = async () => {
+//   const flims = await knex("flims").select("id", "crews");
+//   let persons = await knex("persons").select("id", "crawl_data");
+//   persons = persons.map((item) => {
+//     return {
+//       id: item.id,
+//       url: item.crawl_data.url,
+//     };
+//   });
+//   for (const flim of flims) {
+//     const results = [];
+//     for (let crew of flim.crews) {
+//       const { id } = _.find(persons, { url: crew.person });
+//       if (id) {
+//         crew.person = id;
+//         results.push(deepClone(crew));
+//       }
+//     }
+//     const [res] = await knex("flims")
+//       .update({ crews: results })
+//       .where({ id: flim.id })
+//       .returning("*");
+//     if (res) {
+//       console.log("", res.id);
+//     }
+//   }
+//   console.log("DONE");
+// };
+
 const restruct = async () => {
-  let flimUrlResults = [];
-  const flims = await knex("flims").select("crews");
-  for (const item of flims) {
-    flimUrlResults = [
-      ...flimUrlResults,
-      ...item.crews.map((item) => item.person),
-    ];
+  const flims = await knex("flims").select("id", "data");
+  let posts = await knex("posts").select("id", "crawl_data");
+  posts = posts.map((item) => {
+    return {
+      id: item.id,
+      url: item.crawl_data.url,
+    };
+  });
+  for (const flim of flims) {
+    const results = [];
+    for (let news of flim.data.news) {
+      const { id } = _.find(posts, { url: news.url });
+      if (id) {
+        results.push(id);
+      }
+    }
+    if (!results.length) {
+      console.log(flim.data.news);
+    }
+    // if (results.length) {
+    //   flim.data.news = results;
+    // }
+    // const [res] = await knex("flims")
+    //   .update({ data: flim.data })
+    //   .where({ id: flim.id })
+    //   .returning("*");
+    // if (res) {
+    //   console.log("", res.id);
+    // }
   }
-  flimUrlResults = _.uniq(flimUrlResults); //30085
-  let personsUrlResults = [];
-  const persons = await knex("persons").select("crawl_data");
-  for (const item of persons) {
-    personsUrlResults.push(item.crawl_data.url); //28923
-  }
-  const different = _.difference(flimUrlResults, personsUrlResults);
-  for (const item of different) {
-    await fs.appendFileSync("miss-link.txt", item + "\n", "utf8");
-  }
+
   console.log("DONE");
 };
+
+// const restruct = async () => {
+//   let flimUrlResults = [];
+//   const flims = await knex("flims").select("data");
+//   let titles = [];
+//   for (const item of flims) {
+//     flimUrlResults = [
+//       ...flimUrlResults,
+//       ...item.data.news.map((item) => item.url),
+//     ];
+//     titles = [...titles, ...item.data.news];
+//   }
+//   flimUrlResults = _.uniq(flimUrlResults);
+//   titles = _.uniq(titles);
+
+//   let postUrlResults = [];
+//   const posts = await knex("posts").select("crawl_data");
+//   for (const item of posts) {
+//     postUrlResults.push(item.crawl_data.url);
+//   }
+
+//   const different = _.difference(flimUrlResults, postUrlResults);
+//   for (const item of different) {
+//     const { title } = _.find(titles, { url: item });
+//     await fs.appendFileSync(
+//       "miss-link.txt",
+//       JSON.stringify({
+//         url: item,
+//         title,
+//       }) + "\n",
+//       "utf8"
+//     );
+//   }
+//   console.log("DONE");
+// };
 
 restruct();
