@@ -1,76 +1,78 @@
+const fs = require("fs");
+const _ = require("lodash");
 const { knex } = require("../../../controllers");
-const faker = require("faker");
-const photos = [
-  "https://upload.wikimedia.org/wikipedia/en/1/10/The_Lego_Movie_poster.jpg",
-  "https://www.cnet.com/a/img/resize/38878b4401154eb2c4cd9c4d09bf39b9c70ad827/hub/2021/01/05/c038963b-027d-40e5-a158-2d0d0617b4e3/black-widow-marvel-poster-crop.jpg?auto=webp&width=1092",
-  "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201910/warr-770x433.jpeg?54Ca7.SmVmwNrlVarS3qz4.4AmY_AbOj",
-  "https://www.studiomoviegrill.com/content/743fb356-6f14-4cb1-a9f7-2a0cecb2d3e6.jpg",
-  "https://terrigen-cdn-dev.marvel.com/content/prod/1x/shangchi_lob_crd-04.jpg",
-  "https://www.moviehouse.co.uk/Media/775c6248-c78f-43e8-8cb3-cc9a4722d1b0.jpg",
-];
+// const faker = require("faker");
+// const photos = [
+//   "https://upload.wikimedia.org/wikipedia/en/1/10/The_Lego_Movie_poster.jpg",
+//   "https://www.cnet.com/a/img/resize/38878b4401154eb2c4cd9c4d09bf39b9c70ad827/hub/2021/01/05/c038963b-027d-40e5-a158-2d0d0617b4e3/black-widow-marvel-poster-crop.jpg?auto=webp&width=1092",
+//   "https://akm-img-a-in.tosshub.com/indiatoday/images/story/201910/warr-770x433.jpeg?54Ca7.SmVmwNrlVarS3qz4.4AmY_AbOj",
+//   "https://www.studiomoviegrill.com/content/743fb356-6f14-4cb1-a9f7-2a0cecb2d3e6.jpg",
+//   "https://terrigen-cdn-dev.marvel.com/content/prod/1x/shangchi_lob_crd-04.jpg",
+//   "https://www.moviehouse.co.uk/Media/775c6248-c78f-43e8-8cb3-cc9a4722d1b0.jpg",
+// ];
 
-const quotes = [
-  {
-    name: "Ed Warren",
-    content:
-      "It was big mistake, acknowledging this doll. Though it. The inhuman spirit tricked you..",
-  },
-  {
-    name: "Roger Perron",
-    content: "I don't know what you are! But you leave my wife alone damn you!",
-  },
-  {
-    name: "Bathsheba",
-    content: "She's already gone.. And now your all gonna die",
-  },
-  {
-    name: "Ed Warren",
-    content: "Sometimes it's better to keep the genie in the bottle",
-  },
-  {
-    name: "Drew",
-    content: "You can't shoot a ghost.",
-  },
-  {
-    name: "Christine",
-    content: "No, no! It talked to me..",
-  },
-  {
-    name: "Suicide Maid",
-    content: "You made me do this.",
-  },
-  {
-    name: "April",
-    content:
-      "When the music stops, you'll see him in the mirror standin' behind you.",
-  },
-  {
-    name: "Cindy",
-    content:
-      "There's a lady in a dirty night gown, that I see in my dreams, she's standin' in front of my mom's bed.",
-  },
-  {
-    name: "Ed Warren",
-    content:
-      "It was big mistake, acknowledging this doll. Though it. The inhuman spirit tricked you..",
-  },
-  {
-    name: "Roger Perron",
-    content: "I don't know what you are! But you leave my wife alone damn you!",
-  },
-  {
-    name: "Bathsheba",
-    content: "She's already gone.. And now your all gonna die",
-  },
-  {
-    name: "Ed Warren",
-    content: "Sometimes it's better to keep the genie in the bottle",
-  },
-  {
-    name: "Drew",
-    content: "You can't shoot a ghost.",
-  },
-];
+// const quotes = [
+//   {
+//     name: "Ed Warren",
+//     content:
+//       "It was big mistake, acknowledging this doll. Though it. The inhuman spirit tricked you..",
+//   },
+//   {
+//     name: "Roger Perron",
+//     content: "I don't know what you are! But you leave my wife alone damn you!",
+//   },
+//   {
+//     name: "Bathsheba",
+//     content: "She's already gone.. And now your all gonna die",
+//   },
+//   {
+//     name: "Ed Warren",
+//     content: "Sometimes it's better to keep the genie in the bottle",
+//   },
+//   {
+//     name: "Drew",
+//     content: "You can't shoot a ghost.",
+//   },
+//   {
+//     name: "Christine",
+//     content: "No, no! It talked to me..",
+//   },
+//   {
+//     name: "Suicide Maid",
+//     content: "You made me do this.",
+//   },
+//   {
+//     name: "April",
+//     content:
+//       "When the music stops, you'll see him in the mirror standin' behind you.",
+//   },
+//   {
+//     name: "Cindy",
+//     content:
+//       "There's a lady in a dirty night gown, that I see in my dreams, she's standin' in front of my mom's bed.",
+//   },
+//   {
+//     name: "Ed Warren",
+//     content:
+//       "It was big mistake, acknowledging this doll. Though it. The inhuman spirit tricked you..",
+//   },
+//   {
+//     name: "Roger Perron",
+//     content: "I don't know what you are! But you leave my wife alone damn you!",
+//   },
+//   {
+//     name: "Bathsheba",
+//     content: "She's already gone.. And now your all gonna die",
+//   },
+//   {
+//     name: "Ed Warren",
+//     content: "Sometimes it's better to keep the genie in the bottle",
+//   },
+//   {
+//     name: "Drew",
+//     content: "You can't shoot a ghost.",
+//   },
+// ];
 const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
 
 // const getIds = async () => {
@@ -161,3 +163,27 @@ const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
 // };
 
 // getIds();
+
+const restruct = async () => {
+  let flimUrlResults = [];
+  const flims = await knex("flims").select("crews");
+  for (const item of flims) {
+    flimUrlResults = [
+      ...flimUrlResults,
+      ...item.crews.map((item) => item.person),
+    ];
+  }
+  flimUrlResults = _.uniq(flimUrlResults); //30085
+  let personsUrlResults = [];
+  const persons = await knex("persons").select("crawl_data");
+  for (const item of persons) {
+    personsUrlResults.push(item.crawl_data.url); //28923
+  }
+  const different = _.difference(flimUrlResults, personsUrlResults);
+  for (const item of different) {
+    await fs.appendFileSync("miss-link.txt", item + "\n", "utf8");
+  }
+  console.log("DONE");
+};
+
+restruct();

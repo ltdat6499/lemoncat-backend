@@ -3,7 +3,7 @@ const readline = require("readline");
 const knex = require("../../../controllers/knex");
 
 const loadArray = async () => {
-  const file = fs.createReadStream("3.txt");
+  const file = fs.createReadStream("persons.txt");
   const lines = readline.createInterface({
     input: file,
     crlfDelay: Infinity,
