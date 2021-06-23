@@ -6,12 +6,12 @@ exports.up = async (knex) => {
       email TEXT NOT NULL UNIQUE,
       password TEXT,
       name TEXT,
-      image JSON,
-      login_data JSON DEFAULT NULL,
+      image TEXT,
+      login_data jsonb DEFAULT NULL,
       status BOOL DEFAULT true,
       role TEXT DEFAULT 'user',
       data jsonb,
-      slug TEXT,
+      slug TEXT NOT NULL UNIQUE,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )
