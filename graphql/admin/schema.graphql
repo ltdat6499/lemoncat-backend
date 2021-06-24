@@ -51,7 +51,7 @@ input ReportInput {
   user: String
   targetType: String
   tartgetId: String
-  target: string
+  target: String
   type: String
   content: String
   status: String
@@ -60,14 +60,14 @@ input ReportInput {
 type Report {
   user: User
   targetType: String
-  tartgetId: String
+  targetId: String
   type: String
   content: String
   status: String
 }
 
 type UserData {
-  elo: string
+  elo: String
   reports: [Report]
   working: String
   activeAt: Date
@@ -361,8 +361,8 @@ type Query {
   person(id: String): Person
   posts: [Post]
   post(id: String): Post
-  tops: [Top]
-  top(id: String): Top
+  # tops: [Top]
+  # top(id: String): Top
 }
 
 type Mutation {
