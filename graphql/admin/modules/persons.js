@@ -33,11 +33,7 @@ module.exports = {
   },
   Person: {
     bornIn: (parent) => parent.born_in,
-    createdAt: (parent) => parent.created_at,
-    updatedAt: (parent) => parent.updated_at,
-  },
-  PersonInput: {
-    bornIn: (parent) => parent.born_in,
+    // data: (parent) => parent.crawl_data,
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
   },

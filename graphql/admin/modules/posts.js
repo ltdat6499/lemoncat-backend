@@ -32,13 +32,13 @@ module.exports = {
     },
   },
   Post: {
-    contentHtml: (parent) => parent.content_html,
+    section: (parent) => parent.crawl_data.sections[0],
+    previewPoster: (parent) => parent.crawl_data.preview_poster,
+    date: (parent) => parent.crawl_data.date,
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
   },
-  PostInput: {
-    contentHtml: (parent) => parent.content_html,
-    createdAt: (parent) => parent.created_at,
-    updatedAt: (parent) => parent.updated_at,
+  PostInteract: {
+    user: async (parent) => await users.getById(parent.user),
   },
 };

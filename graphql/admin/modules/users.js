@@ -1,5 +1,4 @@
 const { users } = require("../../../controllers");
-const tools = require("../../../global");
 
 module.exports = {
   Query: {
@@ -13,7 +12,6 @@ module.exports = {
   },
   Mutation: {
     async createUser(__, { input }) {
-      input.id = tools.genId();
       const [result] = await users.create(input);
       return result;
     },
@@ -30,5 +28,13 @@ module.exports = {
   User: {
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
+  },
+  UserData: {
+    activeAt: (parent) => parent.active_at,
+  },
+  Report: {
+    targetType: (parent) => parent.target_type,
+    targetId: (parent) => parent.target_id,
+    user: async (parent) => await users.getById(parent.user),
   },
 };

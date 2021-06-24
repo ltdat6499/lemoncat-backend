@@ -48,8 +48,10 @@ scalar Byte
 scalar Void
 
 input ReportInput {
-  target: string
   user: String
+  targetType: String
+  tartgetId: String
+  target: string
   type: String
   content: String
   status: String
@@ -57,6 +59,8 @@ input ReportInput {
 
 type Report {
   user: User
+  targetType: String
+  tartgetId: String
   type: String
   content: String
   status: String
@@ -65,6 +69,8 @@ type Report {
 type UserData {
   elo: string
   reports: [Report]
+  working: String
+  activeAt: Date
 }
 
 input UserDataInput {
@@ -86,7 +92,6 @@ type User {
 }
 
 input UserInput {
-  id: String
   email: String
   password: String
   name: String
@@ -183,9 +188,9 @@ input FlimQuoteInput {
 }
 
 type FlimData {
-  news: [News]
-  topReviews: [Post]
-  reviews: [Post]
+  news: [Post]
+  # topReviews: [Post]
+  # reviews: [Post]
   alsoLike: [Flim]
   trailerPhoto: String
   RottenTomatoes: FlimTomatometer
@@ -220,8 +225,8 @@ type Flim {
   crews: [FlimCrew]
   quotes: [FlimQuote]
   data: FlimData
-  lemonScore: String
-  userScore: String
+  # lemonScore: String
+  # userScore: String
   slug: String
   createdAt: DateTime
   updatedAt: DateTime
@@ -261,7 +266,7 @@ type Person {
   summary: String
   images: [String]
   slug: String
-  data: PersonData
+  # data: PersonData
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -330,20 +335,20 @@ input PostInput {
   updatedAt: DateTime
 }
 
-type Top {
-  id: String
-  type: String
-  year: String
-  data: JSON
-  createdAt: DateTime
-  updatedAt: DateTime
-}
+# type Top {
+#   id: String
+#   type: String
+#   year: String
+#   data: JSON
+#   createdAt: DateTime
+#   updatedAt: DateTime
+# }
 
-input TopInput {
-  type: String
-  year: String
-  data: JSON
-}
+# input TopInput {
+#   type: String
+#   year: String
+#   data: JSON
+# }
 
 type Query {
   users: [User]
@@ -376,9 +381,9 @@ type Mutation {
   createPost(input: PostInput): Post
   updatePost(id: String, input: PostInput): Post
   deletePost(id: String): Boolean
-  createTop(input: TopInput): Top
-  updateTop(id: String, input: TopInput): Top
-  deleteTop(id: String): Boolean
+  # createTop(input: TopInput): Top
+  # updateTop(id: String, input: TopInput): Top
+  # deleteTop(id: String): Boolean
 }
 
 schema {

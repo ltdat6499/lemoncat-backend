@@ -9,7 +9,7 @@ exports.up = async (knex) => {
       summary TEXT,
       images TEXT[],
       slug TEXT,
-      crawl_data JSON,
+      data JSON,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )

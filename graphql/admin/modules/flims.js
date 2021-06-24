@@ -1,4 +1,4 @@
-const { flims } = require("../../../controllers");
+const { flims, persons, posts, knex } = require("../../../controllers");
 const tools = require("../../../global");
 
 module.exports = {
@@ -33,15 +33,35 @@ module.exports = {
     },
   },
   Flim: {
-    lemonScore: (parent) => parent.lemon_score,
-    userScore: (parent) => parent.user_score,
-    onScreen: (parent) => parent.on_screen,
+    whatToKnows: (parent) => parent.what_to_knows,
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
   },
-  FlimInput: {
-    onScreen: (parent) => parent.on_screen,
-    createdAt: (parent) => parent.created_at,
-    updatedAt: (parent) => parent.updated_at,
+  FlimInfo: {
+    soundMixs: (parent) => parent.sound_mixs,
+    aspectRatio: (parent) => parent.aspect_ratio,
+    theatersDate: (parent) => parent.theaters_date,
+    streamingDate: (parent) => parent.streaming_date,
+    originalLanguage: (parent) => parent.original_language,
+  },
+  FlimCrew: {
+    person: async (parent) => await persons.getById(parent.person),
+  },
+  FlimData: {
+    trailerPhoto: (parent) => parent.trailer_photo,
+    alsoLike: (parent) => parent.also_like,
+    news: async (parent) => {
+      const results = [];
+      for (const item of parent.news) {
+        const result = await posts.getById(item);
+        results.push(result);
+      }
+      return results;
+    },
+    RottenTomatoes: (parent) => parent.rotten_tomatoes,
+  },
+  FlimTomatometer: {
+    audienceScore: (parent) => parent.audience_score,
+    tomatometerScore: (parent) => parent.tomatometer_score,
   },
 };
