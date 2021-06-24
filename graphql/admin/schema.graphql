@@ -47,34 +47,60 @@ scalar JSONObject
 scalar Byte
 scalar Void
 
+input ReportInput {
+  target: string
+  user: String
+  type: String
+  content: String
+  status: String
+}
+
+type Report {
+  user: User
+  type: String
+  content: String
+  status: String
+}
+
+type UserData {
+  elo: string
+  reports: [Report]
+}
+
+input UserDataInput {
+  reports: [ReportInput]
+}
+
 type User {
   id: String
   email: String
   password: String
   name: String
   image: String
-  loginData: String
   status: Boolean
   role: String
-  elo: JSON
-  otp: String
+  data: UserData
+  slug: String
   createdAt: DateTime
   updatedAt: DateTime
 }
 
 input UserInput {
+  id: String
   email: String
   password: String
   name: String
   image: String
-  token: String
+  status: Boolean
+  role: String
+  data: UserDataInput
 }
 
 type Comment {
   id: String
-  parent: String
   parentType: String
-  uid: String
+  parent: JSON
+  user: User
   interact: String
   content: String
   createdAt: DateTime
@@ -82,36 +108,149 @@ type Comment {
 }
 
 input CommentInput {
-  parent: String
+  id: String
   parentType: String
+  parent: String
   uid: String
   interact: String
   content: String
 }
 
+type FlimCrew {
+  role: String
+  person: Person
+}
+
+input FlimCrewInput {
+  role: String
+  person: String
+}
+
+type FlimInfo {
+  name: String
+  tags: [String]
+  genres: [String]
+  poster: String
+  rating: String
+  runtime: String
+  summary: String
+  trailer: String
+  collection: String
+  soundMixs: [String]
+  productions: [String]
+  aspectRatio: String
+  theatersDate: String
+  streamingDate: String
+  originalLanguage: String
+}
+
+input FlimInfoInput {
+  name: String
+  tags: [String]
+  genres: [String]
+  poster: String
+  rating: String
+  runtime: String
+  summary: String
+  trailer: String
+  collection: String
+  soundMixs: [String]
+  productions: [String]
+  aspectRatio: String
+  theatersDate: String
+  streamingDate: String
+  originalLanguage: String
+}
+
+type FlimWhatToKnow {
+  title: String
+  content: String
+}
+
+input FlimWhatToKnowInput {
+  title: String
+  content: String
+}
+
+type FlimQuote {
+  name: String
+  content: String
+}
+
+input FlimQuoteInput {
+  name: String
+  content: String
+}
+
+type FlimData {
+  news: [News]
+  topReviews: [Post]
+  reviews: [Post]
+  alsoLike: [Flim]
+  trailerPhoto: String
+  RottenTomatoes: FlimTomatometer
+}
+
+input FlimDataInput {
+  news: [String]
+  topReviews: [String]
+  reviews: [String]
+  alsoLike: [String]
+  trailerPhoto: String
+  RottenTomatoes: FlimTomatometerInput
+}
+
+type FlimTomatometer {
+  audienceScore: String
+  tomatometerScore: String
+}
+
+input FlimTomatometerInput {
+  audienceScore: String
+  tomatometerScore: String
+}
+
 type Flim {
   id: String
-  summary: String
-  rating: String
-  images: [String]
-  genres: [String]
-  onScreen: DateTime
-  lemonScore: Int
-  userScore: Int
-  status: Boolean
-  hot: Boolean
+  type: String
+  info: FlimInfo
+  whatToKnows: [FlimWhatToKnow]
+  streamings: [String]
+  photos: [String]
+  crews: [FlimCrew]
+  quotes: [FlimQuote]
+  data: FlimData
+  lemonScore: String
+  userScore: String
+  slug: String
   createdAt: DateTime
   updatedAt: DateTime
 }
 
 input FlimInput {
-  summary: String
-  rating: String
-  images: [String]
-  genres: [String]
-  onScreen: DateTime
-  status: Boolean
-  hot: Boolean
+  id: String
+  type: String
+  info: FlimInfoInput
+  whatToKnows: [FlimWhatToKnowInput]
+  streamings: [String]
+  photos: [String]
+  crews: [FlimCrewInput]
+  quotes: [FlimQuoteInput]
+  data: FlimDataInput
+}
+
+type PersonData {
+  bestRated: [Flim]
+  highestRated: Flim
+  lowestRated: Flim
+  relativeNews: [Post]
+}
+
+input PersonDataInput {
+  bestRated: [String]
+  highestRated: String
+  lowestRated: String
+  relativeNews: [String]
 }
 
 type Person {
@@ -121,40 +260,74 @@ type Person {
   bornIn: String
   summary: String
   images: [String]
+  slug: String
+  data: PersonData
   createdAt: DateTime
   updatedAt: DateTime
 }
 
 input PersonInput {
+  id: String
   name: String
   birth: Date
   bornIn: String
   summary: String
   images: [String]
+  data: PersonDataInput
+}
+
+input PostDataInput {
+  flim: String
+  score: Int
+}
+
+type PostData {
+  flim: Flim
+  score: Int
+}
+
+input PostInteractInput {
+  user: String
+  interact: String
+}
+
+type PostInteract {
+  user: User
+  interact: String
 }
 
 type Post {
   id: String
+  type: String
   uid: String
   content: String
-  contentHtml: String
+  data: PostData
   tags: [String]
-  score: Int
-  interact: String
-  category: String
+  interacts: [PostInteract]
+  section: String
+  previewPoster: String
+  date: String
   status: Boolean
+  slug: String
   createdAt: DateTime
   updatedAt: DateTime
 }
 
 input PostInput {
+  id: String
+  type: String
+  uid: String
   content: String
-  contentHtml: String
+  data: PostDataInput
   tags: [String]
-  score: Int
-  interact: String
-  category: String
+  interacts: [PostInteractInput]
+  section: String
+  previewPoster: String
+  date: String
   status: Boolean
+  slug: String
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type Top {
