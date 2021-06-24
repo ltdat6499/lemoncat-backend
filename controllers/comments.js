@@ -1,7 +1,7 @@
 const knex = require("./knex");
 
-const getAll = async () => {
-  return await knex("comments").select().limit(5000);
+const getAll = async (offset) => {
+  return await knex("comments").select().offset(offset).limit(5000);
 };
 
 const getById = async (id) => {
