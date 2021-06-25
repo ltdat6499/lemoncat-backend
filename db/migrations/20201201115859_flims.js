@@ -15,7 +15,6 @@ exports.up = async (knex) => {
       user_score INT DEFAULT 0,
       status BOOL DEFAULT TRUE,
       slug TEXT,
-      crawl_data jsonb,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )
