@@ -1,4 +1,4 @@
-const admin = require("../graphql/admin");
+const graphql = require("../graphql/defines");
 
 const login = (req, res) => {
   res.render("login");
@@ -10,7 +10,7 @@ const logout = (req, res) => {
 };
 
 module.exports = {
-  admin,
+  graphql,
   login,
   logout,
 };

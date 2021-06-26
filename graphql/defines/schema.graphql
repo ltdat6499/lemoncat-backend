@@ -47,36 +47,6 @@ scalar JSONObject
 scalar Byte
 scalar Void
 
-input ReportInput {
-  user: String
-  targetType: String
-  tartgetId: String
-  target: String
-  type: String
-  content: String
-  status: String
-}
-
-type Report {
-  user: User
-  targetType: String
-  targetId: String
-  type: String
-  content: String
-  status: String
-}
-
-type UserData {
-  elo: String
-  reports: [Report]
-  working: String
-  activeAt: Date
-}
-
-input UserDataInput {
-  reports: [ReportInput]
-}
-
 type User {
   id: String
   email: String
@@ -91,6 +61,31 @@ type User {
   updatedAt: DateTime
 }
 
+input ReportInput {
+  fromUser: String
+  targetType: String
+  type: String
+  tartgetId: String
+  content: String
+  status: String
+}
+
+type Report {
+  fromUser: User
+  type: String
+  targetType: String
+  targetId: String
+  content: String
+  status: String
+}
+
+type UserData {
+  elo: String
+  reports: [Report]
+  working: String
+  activeAt: Date
+}
+
 input UserInput {
   email: String
   password: String
@@ -101,25 +96,32 @@ input UserInput {
   data: UserDataInput
 }
 
-type Comment {
+input UserDataInput {
+  reports: [ReportInput]
+}
+
+# ----------------------------------------------------------------------------------------------------------------------------------
+
+type Action {
   id: String
+  type: String
   parentType: String
   parent: JSON
   user: User
-  interact: String
-  content: String
+  data: String
   createdAt: DateTime
   updatedAt: DateTime
 }
 
-input CommentInput {
-  id: String
+input ActionInput {
+  type: String
   parentType: String
   parent: String
   uid: String
-  interact: String
-  content: String
+  data: String
 }
+
+# ----------------------------------------------------------------------------------------------------------------------------------
 
 type FlimCrew {
   role: String
@@ -189,8 +191,8 @@ input FlimQuoteInput {
 
 type FlimData {
   news: [Post]
-  # topReviews: [Post]
-  # reviews: [Post]
+  topReviews: [Post]
+  reviews: [Post]
   alsoLike: [Flim]
   trailerPhoto: String
   RottenTomatoes: FlimTomatometer
@@ -225,15 +227,12 @@ type Flim {
   crews: [FlimCrew]
   quotes: [FlimQuote]
   data: FlimData
-  # lemonScore: String
-  # userScore: String
   slug: String
   createdAt: DateTime
   updatedAt: DateTime
 }
 
 input FlimInput {
-  id: String
   type: String
   info: FlimInfoInput
   whatToKnows: [FlimWhatToKnowInput]
@@ -244,18 +243,13 @@ input FlimInput {
   data: FlimDataInput
 }
 
+# ------------------------------------------------------------------------------------------------
+
 type PersonData {
   bestRated: [Flim]
   highestRated: Flim
   lowestRated: Flim
   relativeNews: [Post]
-}
-
-input PersonDataInput {
-  bestRated: [String]
-  highestRated: String
-  lowestRated: String
-  relativeNews: [String]
 }
 
 type Person {
@@ -266,20 +260,20 @@ type Person {
   summary: String
   images: [String]
   slug: String
-  # data: PersonData
+  data: PersonData
   createdAt: DateTime
   updatedAt: DateTime
 }
 
 input PersonInput {
-  id: String
   name: String
   birth: Date
   bornIn: String
   summary: String
   images: [String]
-  data: PersonDataInput
 }
+
+# ------------------------------------------------------------------------------------------------
 
 input PostDataInput {
   flim: String
@@ -291,27 +285,16 @@ type PostData {
   score: Int
 }
 
-input PostInteractInput {
-  user: String
-  interact: String
-}
-
-type PostInteract {
-  user: User
-  interact: String
-}
-
 type Post {
   id: String
   type: String
   uid: String
+  title: String
   content: String
   data: PostData
   tags: [String]
-  interacts: [PostInteract]
   section: String
   previewPoster: String
-  date: String
   status: Boolean
   slug: String
   createdAt: DateTime
@@ -319,59 +302,40 @@ type Post {
 }
 
 input PostInput {
-  id: String
   type: String
   uid: String
+  title: String
   content: String
   data: PostDataInput
   tags: [String]
-  interacts: [PostInteractInput]
   section: String
   previewPoster: String
-  date: String
   status: Boolean
   slug: String
   createdAt: DateTime
   updatedAt: DateTime
 }
 
-# type Top {
-#   id: String
-#   type: String
-#   year: String
-#   data: JSON
-#   createdAt: DateTime
-#   updatedAt: DateTime
-# }
-
-# input TopInput {
-#   type: String
-#   year: String
-#   data: JSON
-# }
+# ------------------------------------------------------------------------------------------------
 
 type Query {
   users: [User]
   user(id: String): User
-  comments: [Comment]
-  comment(id: String): Comment
   flims: [Flim]
   flim(id: String): Flim
   persons: [Person]
   person(id: String): Person
   posts: [Post]
   post(id: String): Post
-  # tops: [Top]
-  # top(id: String): Top
 }
 
 type Mutation {
   createUser(input: UserInput): User
   updateUser(id: String, input: UserInput): User
   deleteUser(id: String): Boolean
-  createComment(input: CommentInput): Comment
-  updateComment(id: String, input: CommentInput): Comment
-  deleteComment(id: String): Boolean
+  createAction(input: ActionInput): Action
+  updateAction(id: String, input: ActionInput): Action
+  deleteAction(id: String): Boolean
   createFlim(input: FlimInput): Flim
   updateFlim(id: String, input: FlimInput): Flim
   deleteFlim(id: String): Boolean
@@ -381,9 +345,6 @@ type Mutation {
   createPost(input: PostInput): Post
   updatePost(id: String, input: PostInput): Post
   deletePost(id: String): Boolean
-  # createTop(input: TopInput): Top
-  # updateTop(id: String, input: TopInput): Top
-  # deleteTop(id: String): Boolean
 }
 
 schema {

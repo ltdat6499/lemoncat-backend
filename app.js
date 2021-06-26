@@ -57,7 +57,7 @@ app.get("/auth/google/callback", exportPassport.googleCallback, (req, res) =>
   res.redirect("http://localhost:3842/#/login?token=" + req.user)
 );
 
-app.use("/admin-graphql", router.admin);
+app.use("/graphql", router.graphql);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
