@@ -1,13 +1,11 @@
 exports.up = async (knex) => {
   await knex.raw(`
-    CREATE TABLE comments
+    CREATE TABLE awards
     (
       id BIGINT NOT NULL PRIMARY KEY DEFAULT lemoncat.next_id(),
-      parent_type TEXT,
-      parent BIGINT,
-      uid BIGINT,
-      interact TEXT,
-      content TEXT,
+      name TEXT,
+      year TEXT,
+      data jsonb,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )
@@ -16,6 +14,6 @@ exports.up = async (knex) => {
 
 exports.down = async (knex) => {
   await knex.raw(`
-    DROP TABLE comments
+    DROP TABLE awards
   `);
 };
