@@ -1,39 +1,36 @@
-const { persons } = require("../../../controllers");
+const controllers = require("../../../controllers");
 const tools = require("../../../global");
 
 module.exports = {
   Query: {
-    async persons() {
-      return await persons.getAll();
+    async persons(__, args) {
+      const { page, size } = args;
+      return await controllers.get("persons", page, size);
     },
     async person(__, args) {
       const { id } = args;
-      return await persons.getById(id);
+      return await controllers.getById("persons", id);
     },
   },
   Mutation: {
-    async createPerson(__, { input }) {
-      input.id = tools.genId();
+    async createAction(__, { input }) {
       input = tools.changeCaseType(input, "snakeCase");
-      const [result] = await persons.create(input);
+      const [result] = await controllers.create("persons", input);
       return result;
     },
-    async updatePerson(__, args) {
-      const { input, id } = args;
-      const [result] = await persons.update(
-        id,
-        tools.changeCaseType(input, "snakeCase")
-      );
+    async updateAction(__, args) {
+      let { input, id } = args;
+      input = tools.changeCaseType(input, "snakeCase");
+      const [result] = await controllers.update("persons", id, input);
       return result;
     },
-    async deletePerson(__, { id }) {
-      const result = await persons.deleteById(id);
+    async deleteAction(__, { id }) {
+      const result = await controllers.deleteById("persons", id);
       return result.length;
     },
   },
   Person: {
     bornIn: (parent) => parent.born_in,
-    // data: (parent) => parent.crawl_data,
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
   },

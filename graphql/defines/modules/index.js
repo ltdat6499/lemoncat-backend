@@ -2,11 +2,11 @@ const _ = require("lodash");
 
 const modules = [
   require("./users"),
-  require("./comments"),
-  require("./flims"),
+  require("./actions"),
+  // require("./flims"),
   require("./persons"),
-  require("./posts"),
-  require("./tops"),
+  // require("./posts"),
+  // require("./awards"),
 ];
 const resolvers = modules.reduce((list = {}, items) => _.merge(list, items));
 

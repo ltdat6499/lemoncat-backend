@@ -1,14 +1,14 @@
-const knex = require("./controllers/knex");
-const moment = require("moment");
-const _ = require("lodash");
-const interacts = ["love", "care", "wow", "like", "dislike", "angry"];
-const getRandomInt = (min, max) => {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-};
-const fs = require("fs");
-const readline = require("readline");
+// const knex = require("./controllers/knex");
+// const moment = require("moment");
+// const _ = require("lodash");
+// const interacts = ["love", "care", "wow", "like", "dislike", "angry"];
+// const getRandomInt = (min, max) => {
+//   min = Math.ceil(min);
+//   max = Math.floor(max);
+//   return Math.floor(Math.random() * (max - min + 1)) + min;
+// };
+// const fs = require("fs");
+// const readline = require("readline");
 
 // const loadArray = async () => {
 //   const file = fs.createReadStream("_comments__202106261307.txt");
@@ -33,7 +33,7 @@ const readline = require("readline");
 //     .where({ type: "comment" })
 //     .andWhere({ parent_type: "comment" });
 //   actions = actions.map((post) => post.id);
-
+//   actions = _.shuffle(actions);
 //   let users = await knex("users").select("id");
 //   users = users.map((user) => user.id);
 //   users = _.shuffle(users);
@@ -59,6 +59,4 @@ const readline = require("readline");
 //   console.log("DONE");
 // };
 
-
-
-run();
+// run();
