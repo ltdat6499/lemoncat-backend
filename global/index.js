@@ -2,6 +2,8 @@ const fs = require("fs");
 const request = require("request");
 const moment = require("moment");
 const changeCase = require("change-case");
+// const { convert } = require("html-to-text");
+const striptags = require("striptags");
 
 const deepClone = (instance) => JSON.parse(JSON.stringify(instance));
 
@@ -34,6 +36,8 @@ const deleteFile = async (path) => {
 
 const formatLLToDefault = (data) => moment(data).format().toString();
 
+const htmlToText = (data) => striptags(data);
+
 module.exports = {
   ...require("./password"),
   changeCaseType,
@@ -41,4 +45,5 @@ module.exports = {
   download,
   deleteFile,
   formatLLToDefault,
+  htmlToText,
 };

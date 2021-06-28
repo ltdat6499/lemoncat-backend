@@ -40,6 +40,28 @@ const getByIds = async (table, ids) => {
   return results;
 };
 
+const posts = {
+  get: async (
+    page = 1,
+    size = 10,
+    type = "news",
+    collection = "Critics Consensus",
+    sortKey = "DATE"
+  ) => {
+    let results = knex("posts")
+      .select()
+      .where({ status: true, type })
+      .limit(size)
+      .offset((page - 1) * size);
+    if (type === "news")
+      results = results.andWhereRaw("cast(data->>'section' as text) = ?", [
+        collection,
+      ]);
+    if (sortKey === "DATE") results = results.orderBy("updated_at", "desc");
+    return await results;
+  },
+};
+
 module.exports = {
   knex,
   get,
@@ -49,4 +71,5 @@ module.exports = {
   update,
   getByParams,
   getByIds,
+  posts,
 };

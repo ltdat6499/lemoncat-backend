@@ -42,6 +42,7 @@
     "graphql-scalars": "^1.9.0",
     "graphql-tools": "^7.0.4",
     "html-minifier": "^4.0.0",
+    "html-to-text": "^8.0.0",
     "http-errors": "~1.6.3",
     "jsonwebtoken": "^8.5.1",
     "knex": "^0.95.4",
@@ -60,6 +61,7 @@
     "request": "^2.88.2",
     "require-text": "0.0.1",
     "selenium-webdriver": "^4.0.0-beta.4",
+    "striptags": "^3.2.0",
     "uuid": "^8.3.2"
   }
 }

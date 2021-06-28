@@ -277,12 +277,18 @@ type PostData {
   score: Int
 }
 
+enum PostSortKey {
+  DATE
+}
+
 type Post {
   id: String
   type: String
   user: User
   title: String
+  sideTitle: String
   content: String
+  rawContent: String
   data: PostData
   tags: [String]
   status: Boolean
@@ -313,7 +319,13 @@ type Query {
   flim(id: String): Flim
   persons(page: Int, size: Int): [Person]
   person(id: String): Person
-  posts(page: Int, size: Int): [Post]
+  posts(
+    page: Int
+    size: Int
+    type: String
+    collection: String
+    sortKey: PostSortKey
+  ): [Post]
   post(id: String): Post
 }
 

@@ -4,8 +4,8 @@ const tools = require("../../../global");
 module.exports = {
   Query: {
     async posts(__, args) {
-      const { page, size } = args;
-      return await controllers.get("posts", page, size);
+      const { page, size, type, collection, sortKey } = args;
+      return await controllers.posts.get(page, size, type, collection, sortKey);
     },
     async post(__, args) {
       const { id } = args;
@@ -30,6 +30,12 @@ module.exports = {
     },
   },
   Post: {
+    sideTitle: (parent) => {
+      let result = tools.htmlToText(parent.content).split(". ");
+      result = result[result.length - 4 >= 0 ? result.length - 4 : 0];
+      return result;
+    },
+    rawContent: (parent) => tools.htmlToText(parent.content),
     user: async (parent) => await controllers.getById("users", parent.uid),
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
