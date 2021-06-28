@@ -1,44 +1,44 @@
-const { posts } = require("../../../controllers");
+const controllers = require("../../../controllers");
 const tools = require("../../../global");
 
 module.exports = {
   Query: {
-    async posts() {
-      return await posts.getAll();
+    async posts(__, args) {
+      const { page, size } = args;
+      return await controllers.get("posts", page, size);
     },
     async post(__, args) {
       const { id } = args;
-      return await posts.getById(id);
+      return await controllers.getById("posts", id);
     },
   },
   Mutation: {
     async createPost(__, { input }) {
-      input.id = tools.genId();
       input = tools.changeCaseType(input, "snakeCase");
-      const [result] = await posts.create(input);
+      const [result] = await controllers.create("posts", input);
       return result;
     },
     async updatePost(__, args) {
-      const { input, id } = args;
-      const [result] = await posts.update(
-        id,
-        tools.changeCaseType(input, "snakeCase")
-      );
+      let { input, id } = args;
+      input = tools.changeCaseType(input, "snakeCase");
+      const [result] = await controllers.update("posts", id, input);
       return result;
     },
     async deletePost(__, { id }) {
-      const result = await posts.deleteById(id);
+      const result = await controllers.deleteById("posts", id);
       return result.length;
     },
   },
   Post: {
-    section: (parent) => parent.crawl_data.sections[0],
-    previewPoster: (parent) => parent.crawl_data.preview_poster,
-    date: (parent) => parent.crawl_data.date,
+    user: async (parent) => await controllers.getById("users", parent.uid),
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
   },
-  PostInteract: {
-    user: async (parent) => await users.getById(parent.user),
+  PostData: {
+    section: (parent) => parent.section || "",
+    score: (parent) => parent.score || 0,
+    previewPoster: (parent) => parent.preview_poster,
+    flim: async (parent) =>
+      parent.flim ? await controllers.getById("flims", parent.flim) : null,
   },
 };

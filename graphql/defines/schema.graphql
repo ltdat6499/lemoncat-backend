@@ -122,125 +122,122 @@ input ActionInput {
 
 # ----------------------------------------------------------------------------------------------------------------------------------
 
-# type FlimCrew {
-#   role: String
-#   person: Person
-# }
+type FlimCrew {
+  role: String
+  person: Person
+}
 
-# input FlimCrewInput {
-#   role: String
-#   person: String
-# }
+input FlimCrewInput {
+  role: String
+  person: String
+}
 
-# type FlimInfo {
-#   name: String
-#   tags: [String]
-#   genres: [String]
-#   poster: String
-#   rating: String
-#   runtime: String
-#   summary: String
-#   trailer: String
-#   collection: String
-#   soundMixs: [String]
-#   productions: [String]
-#   aspectRatio: String
-#   theatersDate: String
-#   streamingDate: String
-#   originalLanguage: String
-# }
+type FlimInfo {
+  name: String
+  tags: [String]
+  genres: [String]
+  poster: String
+  rating: String
+  runtime: String
+  summary: String
+  trailer: String
+  collection: String
+  soundMixs: [String]
+  productions: [String]
+  aspectRatio: String
+  theatersDate: DateTime
+  streamingDate: DateTime
+  originalLanguage: String
+}
 
-# input FlimInfoInput {
-#   name: String
-#   tags: [String]
-#   genres: [String]
-#   poster: String
-#   rating: String
-#   runtime: String
-#   summary: String
-#   trailer: String
-#   collection: String
-#   soundMixs: [String]
-#   productions: [String]
-#   aspectRatio: String
-#   theatersDate: String
-#   streamingDate: String
-#   originalLanguage: String
-# }
+input FlimInfoInput {
+  name: String
+  tags: [String]
+  genres: [String]
+  poster: String
+  rating: String
+  runtime: String
+  summary: String
+  trailer: String
+  collection: String
+  soundMixs: [String]
+  productions: [String]
+  aspectRatio: String
+  theatersDate: DateTime
+  streamingDate: DateTime
+  originalLanguage: String
+}
 
-# type FlimWhatToKnow {
-#   title: String
-#   content: String
-# }
+type FlimWhatToKnow {
+  title: String
+  content: String
+}
 
-# input FlimWhatToKnowInput {
-#   title: String
-#   content: String
-# }
+input FlimWhatToKnowInput {
+  title: String
+  content: String
+}
 
-# type FlimQuote {
-#   name: String
-#   content: String
-# }
+type FlimQuote {
+  name: String
+  content: String
+}
 
-# input FlimQuoteInput {
-#   name: String
-#   content: String
-# }
+input FlimQuoteInput {
+  name: String
+  content: String
+}
 
-# type FlimData {
-#   news: [Post]
-#   topReviews: [Post]
-#   reviews: [Post]
-#   alsoLike: [Flim]
-#   trailerPhoto: String
-#   RottenTomatoes: FlimTomatometer
-# }
+type FlimData {
+  news: [Post]
+  # topReviews: [Post]
+  # reviews: [Post]
+  # alsoLike: [Flim]
+  trailerPhoto: String
+  RottenTomatoes: FlimTomatometer
+}
 
-# input FlimDataInput {
-#   news: [String]
-#   topReviews: [String]
-#   reviews: [String]
-#   alsoLike: [String]
-#   trailerPhoto: String
-#   RottenTomatoes: FlimTomatometerInput
-# }
+input FlimDataInput {
+  news: [String]
+  trailerPhoto: String
+  RottenTomatoes: FlimTomatometerInput
+}
 
-# type FlimTomatometer {
-#   audienceScore: String
-#   tomatometerScore: String
-# }
+type FlimTomatometer {
+  audienceScore: String
+  tomatometerScore: String
+}
 
-# input FlimTomatometerInput {
-#   audienceScore: String
-#   tomatometerScore: String
-# }
+input FlimTomatometerInput {
+  audienceScore: String
+  tomatometerScore: String
+}
 
-# type Flim {
-#   id: String
-#   type: String
-#   info: FlimInfo
-#   whatToKnows: [FlimWhatToKnow]
-#   streamings: [String]
-#   photos: [String]
-#   crews: [FlimCrew]
-#   quotes: [FlimQuote]
-#   data: FlimData
-#   slug: String
-#   createdAt: DateTime
-#   updatedAt: DateTime
-# }
+type Flim {
+  id: String
+  type: String
+  info: FlimInfo
+  whatToKnows: [FlimWhatToKnow]
+  streamings: [String]
+  photos: [String]
+  crews: [FlimCrew]
+  quotes: [FlimQuote]
+  data: FlimData
+  slug: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
 
-# input FlimInput {
-#   type: String
-#   info: FlimInfoInput
-#   whatToKnows: [FlimWhatToKnowInput]
-#   streamings: [String]
-#   photos: [String]
-#   crews: [FlimCrewInput]
-#   quotes: [FlimQuoteInput]
-#   data: FlimDataInput
-# }
+input FlimInput {
+  type: String
+  info: FlimInfoInput
+  whatToKnows: [FlimWhatToKnowInput]
+  streamings: [String]
+  photos: [String]
+  crews: [FlimCrewInput]
+  quotes: [FlimQuoteInput]
+  data: FlimDataInput
+}
 
 # # ------------------------------------------------------------------------------------------------
 
@@ -266,46 +263,44 @@ input PersonInput {
 
 # # ------------------------------------------------------------------------------------------------
 
-# input PostDataInput {
-#   flim: String
-#   score: Int
-# }
+input PostDataInput {
+  section: String
+  previewPoster: String
+  flim: String
+  score: Int
+}
 
-# type PostData {
-#   flim: Flim
-#   score: Int
-# }
+type PostData {
+  section: String
+  previewPoster: String
+  flim: Flim
+  score: Int
+}
 
-# type Post {
-#   id: String
-#   type: String
-#   uid: String
-#   title: String
-#   content: String
-#   data: PostData
-#   tags: [String]
-#   section: String
-#   previewPoster: String
-#   status: Boolean
-#   slug: String
-#   createdAt: DateTime
-#   updatedAt: DateTime
-# }
+type Post {
+  id: String
+  type: String
+  user: User
+  title: String
+  content: String
+  data: PostData
+  tags: [String]
+  status: Boolean
+  slug: String
+  createdAt: DateTime
+  updatedAt: DateTime
+}
 
-# input PostInput {
-#   type: String
-#   uid: String
-#   title: String
-#   content: String
-#   data: PostDataInput
-#   tags: [String]
-#   section: String
-#   previewPoster: String
-#   status: Boolean
-#   slug: String
-#   createdAt: DateTime
-#   updatedAt: DateTime
-# }
+input PostInput {
+  type: String
+  uid: String
+  title: String
+  content: String
+  data: PostDataInput
+  tags: [String]
+  status: Boolean
+  slug: String
+}
 
 # ------------------------------------------------------------------------------------------------
 
@@ -314,12 +309,12 @@ type Query {
   user(id: String): User
   actions(page: Int, size: Int): [Action]
   action(id: String): Action
-  # flims: [Flim]
-  # flim(id: String): Flim
+  flims(page: Int, size: Int): [Flim]
+  flim(id: String): Flim
   persons(page: Int, size: Int): [Person]
   person(id: String): Person
-  # posts: [Post]
-  # post(id: String): Post
+  posts(page: Int, size: Int): [Post]
+  post(id: String): Post
 }
 
 type Mutation {
@@ -329,15 +324,15 @@ type Mutation {
   createAction(input: ActionInput): Action
   updateAction(id: String, input: ActionInput): Action
   deleteAction(id: String): Boolean
-  # createFlim(input: FlimInput): Flim
-  # updateFlim(id: String, input: FlimInput): Flim
-  # deleteFlim(id: String): Boolean
+  createFlim(input: FlimInput): Flim
+  updateFlim(id: String, input: FlimInput): Flim
+  deleteFlim(id: String): Boolean
   createPerson(input: PersonInput): Person
   updatePerson(id: String, input: PersonInput): Person
   deletePerson(id: String): Boolean
-  # createPost(input: PostInput): Post
-  # updatePost(id: String, input: PostInput): Post
-  # deletePost(id: String): Boolean
+  createPost(input: PostInput): Post
+  updatePost(id: String, input: PostInput): Post
+  deletePost(id: String): Boolean
 }
 
 schema {

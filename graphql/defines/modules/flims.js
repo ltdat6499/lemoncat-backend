@@ -1,34 +1,31 @@
-const { flims, persons, posts, knex } = require("../../../controllers");
+const controllers = require("../../../controllers");
 const tools = require("../../../global");
 
 module.exports = {
   Query: {
-    async flims() {
-      return await flims.getAll();
+    async flims(__, args) {
+      const { page, size } = args;
+      return await controllers.get("flims", page, size);
     },
     async flim(__, args) {
       const { id } = args;
-      return await flims.getById(id);
+      return await controllers.getById("flims", id);
     },
   },
   Mutation: {
     async createFlim(__, { input }) {
-      input.id = tools.genId();
-      const [result] = await flims.create(
-        tools.changeCaseType(input, "snakeCase")
-      );
+      input = tools.changeCaseType(input, "snakeCase");
+      const [result] = await controllers.create("flims", input);
       return result;
     },
     async updateFlim(__, args) {
-      const { input, id } = args;
-      const [result] = await flims.update(
-        id,
-        tools.changeCaseType(input, "snakeCase")
-      );
+      let { input, id } = args;
+      input = tools.changeCaseType(input, "snakeCase");
+      const [result] = await controllers.update("flims", id, input);
       return result;
     },
     async deleteFlim(__, { id }) {
-      const result = await flims.deleteById(id);
+      const result = await controllers.deleteById("flims", id);
       return result.length;
     },
   },
@@ -40,24 +37,19 @@ module.exports = {
   FlimInfo: {
     soundMixs: (parent) => parent.sound_mixs,
     aspectRatio: (parent) => parent.aspect_ratio,
-    theatersDate: (parent) => parent.theaters_date,
-    streamingDate: (parent) => parent.streaming_date,
+    theatersDate: (parent) => tools.formatLLToDefault(parent.theaters_date),
+    streamingDate: (parent) => tools.formatLLToDefault(parent.streaming_date),
     originalLanguage: (parent) => parent.original_language,
   },
   FlimCrew: {
-    person: async (parent) => await persons.getById(parent.person),
+    person: async (parent) =>
+      await controllers.getById("persons", parent.person),
   },
   FlimData: {
     trailerPhoto: (parent) => parent.trailer_photo,
-    alsoLike: (parent) => parent.also_like,
-    news: async (parent) => {
-      const results = [];
-      for (const item of parent.news) {
-        const result = await posts.getById(item);
-        results.push(result);
-      }
-      return results;
-    },
+    // topReviews: ()
+    // alsoLike: (parent) => parent.also_like,
+    news: async (parent) => await controllers.getByIds("posts", parent.news),
     RottenTomatoes: (parent) => parent.rotten_tomatoes,
   },
   FlimTomatometer: {

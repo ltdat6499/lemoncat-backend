@@ -31,6 +31,15 @@ const getByParams = async (table, params, page, size) => {
     .offset(page * size);
 };
 
+const getByIds = async (table, ids) => {
+  const results = [];
+  for (const id of ids) {
+    const result = await knex(table).select().where({ id }).first();
+    if (result) results.push(result);
+  }
+  return results;
+};
+
 module.exports = {
   knex,
   get,
@@ -39,4 +48,5 @@ module.exports = {
   deleteById,
   update,
   getByParams,
+  getByIds,
 };

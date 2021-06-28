@@ -1,6 +1,6 @@
-const _ = require("lodash");
 const fs = require("fs");
 const request = require("request");
+const moment = require("moment");
 const changeCase = require("change-case");
 
 const deepClone = (instance) => JSON.parse(JSON.stringify(instance));
@@ -32,11 +32,13 @@ const deleteFile = async (path) => {
   });
 };
 
+const formatLLToDefault = (data) => moment(data).format().toString();
+
 module.exports = {
   ...require("./password"),
   changeCaseType,
   deepClone,
   download,
   deleteFile,
-  _,
+  formatLLToDefault,
 };
