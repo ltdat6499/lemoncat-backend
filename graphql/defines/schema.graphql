@@ -190,11 +190,8 @@ input FlimQuoteInput {
 
 type FlimData {
   news: [Post]
-  # topReviews: [Post]
-  # reviews: [Post]
-  # alsoLike: [Flim]
   trailerPhoto: String
-  RottenTomatoes: FlimTomatometer
+  rottenTomatoes: FlimTomatometer
 }
 
 input FlimDataInput {
@@ -213,6 +210,10 @@ input FlimTomatometerInput {
   tomatometerScore: String
 }
 
+enum FlimSortKey {
+  DATE
+}
+
 type Flim {
   id: String
   type: String
@@ -223,6 +224,8 @@ type Flim {
   crews: [FlimCrew]
   quotes: [FlimQuote]
   data: FlimData
+  userScore: Int
+  lemonScore: Int
   slug: String
   createdAt: DateTime
   updatedAt: DateTime
@@ -315,7 +318,7 @@ type Query {
   user(id: String): User
   actions(page: Int, size: Int): [Action]
   action(id: String): Action
-  flims(page: Int, size: Int): [Flim]
+  flims(page: Int, size: Int, type: String, sortKey: FlimSortKey): [Flim]
   flim(id: String): Flim
   persons(page: Int, size: Int): [Person]
   person(id: String): Person

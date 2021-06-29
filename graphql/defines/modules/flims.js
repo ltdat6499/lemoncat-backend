@@ -4,8 +4,8 @@ const tools = require("../../../global");
 module.exports = {
   Query: {
     async flims(__, args) {
-      const { page, size } = args;
-      return await controllers.get("flims", page, size);
+      const { page, size, type, sortKey } = args;
+      return await controllers.flims.get(page, size, type, sortKey);
     },
     async flim(__, args) {
       const { id } = args;
@@ -31,6 +31,10 @@ module.exports = {
   },
   Flim: {
     whatToKnows: (parent) => parent.what_to_knows,
+    userScore: async (parent) =>
+      await controllers.flims.getScore("user", parent.id),
+    lemonScore: async (parent) =>
+      await controllers.flims.getScore("s-user", parent.id),
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
   },
@@ -50,7 +54,7 @@ module.exports = {
     // topReviews: ()
     // alsoLike: (parent) => parent.also_like,
     news: async (parent) => await controllers.getByIds("posts", parent.news),
-    RottenTomatoes: (parent) => parent.rotten_tomatoes,
+    rottenTomatoes: (parent) => parent.rotten_tomatoes,
   },
   FlimTomatometer: {
     audienceScore: (parent) => parent.audience_score,
