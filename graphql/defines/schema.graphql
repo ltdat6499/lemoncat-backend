@@ -212,6 +212,11 @@ input FlimTomatometerInput {
 
 enum FlimSortKey {
   DATE
+  POPULARINTHEATERS
+  ZOMBIETAG
+  NETFLIX
+  BLOCKBUSTER
+  NEWLYCERTIFIEDFRESH
 }
 
 type Flim {

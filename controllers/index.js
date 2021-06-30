@@ -1,3 +1,5 @@
+const _ = require("lodash");
+const moment = require("moment");
 const knex = require("./knex");
 
 const get = async (table, page, size) => {
@@ -48,7 +50,6 @@ const posts = {
     collection,
     sortKey = "DATE"
   ) => {
-    console.log((page - 1) * size);
     let results = knex("posts")
       .select()
       .where({ status: true, type })
@@ -63,30 +64,71 @@ const posts = {
   },
 };
 
+const getScore = async (type = "s-user", id) => {
+  const reviews = await knex.raw(
+    `select * from posts p where p.data->>'flim' = ? and p."type" = 'reviews' and exists (select * from users u where u."role" = ? and u.id = p.uid)`,
+    [id, type]
+  );
+  if (reviews.rows.length) {
+    let result = 0;
+    for (const item of reviews.rows) {
+      result += item.data.score;
+    }
+    return parseInt(result / reviews.rows.length);
+  }
+  return -1;
+};
+
 const flims = {
   get: async (page = 1, size = 10, type = "movie", sortKey = "DATE") => {
     let results = knex("flims")
       .select()
       .where({ status: true, type })
-      .limit(size)
+
       .offset((page - 1) * size);
-    if (sortKey === "DATE") results = results.orderBy("updated_at", "desc");
+    if (sortKey === "DATE")
+      results = results.orderBy("created_at", "desc").limit(size);
+    else if (sortKey === "POPULARINTHEATERS") {
+      results = results
+        .andWhere("created_at", ">=", moment().subtract(20, "days").format())
+        .andWhere("created_at", "<=", moment().format())
+        .orderBy("created_at", "desc")
+        .limit(size);
+    } else if (sortKey === "ZOMBIETAG") {
+      results = results
+        .andWhereRaw(`info->>'tags' like '%zombie%'`)
+        .limit(size);
+    } else if (sortKey === "NETFLIX") {
+      results = results
+        .andWhere("created_at", ">=", moment().subtract(20, "days").format())
+        .andWhere("created_at", "<=", moment().format())
+        .andWhereRaw(`streamings::text like '%netflix%'`)
+        .orderBy("created_at", "desc")
+        .limit(size);
+    } else if (sortKey === "BLOCKBUSTER") {
+      results = results
+        .andWhere("created_at", "<=", moment("Jan 1, 1995").format())
+        .andWhere("created_at", ">=", moment("Jan 1, 1985").format())
+        .limit(100);
+      results = await results;
+      const res = [];
+      for (const item of results) {
+        item.score = await getScore("s-user", item.id);
+        res.push(item);
+      }
+      return _.sortBy(res, ["score"]).reverse().splice(0, size);
+    } else if (sortKey === "NEWLYCERTIFIEDFRESH") {
+      results = await results.orderBy("created_at", "desc").limit(100);
+      const res = [];
+      for (const item of results) {
+        item.score = await getScore("s-user", item.id);
+        res.push(item);
+      }
+      return _.sortBy(res, ["score"]).reverse().splice(0, size);
+    }
     return await results;
   },
-  getScore: async (type = "s-user", id) => {
-    const reviews = await knex.raw(
-      `select * from posts p where p.data->>'flim' = ? and p."type" = 'reviews' and exists (select * from users u where u."role" = ? and u.id = p.uid)`,
-      [id, type]
-    );
-    if (reviews.rows) {
-      let result = 0;
-      for (const item of reviews.rows) {
-        result += item.data.score;
-      }
-      return parseInt(result / reviews.rows.length);
-    }
-    return null;
-  },
+  getScore,
 };
 
 module.exports = {

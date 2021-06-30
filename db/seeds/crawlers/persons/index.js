@@ -1,8 +1,8 @@
-// const fs = require("fs");
-// const readline = require("readline");
-// const cheerio = require("cheerio");
-// const moment = require("moment");
-// const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
+const fs = require("fs");
+const readline = require("readline");
+const cheerio = require("cheerio");
+const moment = require("moment");
+const deepClone = (obj) => JSON.parse(JSON.stringify(obj));
 
 // const info = [
 //   "div[class='container roma-layout__body']",
@@ -251,18 +251,18 @@
 //   return results;
 // };
 
-// const { Builder, until } = require("selenium-webdriver");
-// const fetchData = async (url) => {
-//   let driver = new Builder()
-//     .forBrowser("firefox")
-//     .usingServer("http://localhost:4442/wd/hub")
-//     .build();
-//   await driver.get(url);
-//   await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
-//   const result = await driver.getPageSource();
-//   await driver.quit();
-//   return cheerio.load(result);
-// };
+const { Builder, until } = require("selenium-webdriver");
+const fetchData = async (url) => {
+  let driver = new Builder()
+    .forBrowser("firefox")
+    .usingServer("http://localhost:4444/wd/hub")
+    .build();
+  await driver.get(url);
+  await driver.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+  const result = await driver.getPageSource();
+  await driver.quit();
+  return cheerio.load(result);
+};
 
 // const crawler = async () => {
 //   const links = await loadArray();
