@@ -125,6 +125,27 @@ const flims = {
         res.push(item);
       }
       return _.sortBy(res, ["score"]).reverse().splice(0, size);
+    } else if (sortKey === "SUPERHEROTAG") {
+      results = results.andWhereRaw(`info->>'tags' like '%hero%'`).limit(size);
+    } else if (sortKey === "POPULARSTREAMINGMOVIES") {
+      results = results
+        .andWhere("created_at", ">=", moment().subtract(20, "days").format())
+        .andWhere("created_at", "<=", moment().format())
+        .andWhereRaw(`streamings::text like '%netflix%'`)
+        .orderBy("created_at", "desc")
+        .limit(size);
+    } else if (sortKey === "NEWMOVIESTHISWEEK") {
+      results = results
+        .andWhere("created_at", ">=", moment().format())
+        .andWhere("created_at", "<=", moment().add(7, "days").format())
+        .orderBy("created_at", "desc")
+        .limit(size);
+    } else if (sortKey === "MOSTPOPULARMOVIESONLC") {
+      results = results
+        .andWhere("created_at", ">=", moment().subtract(30, "days").format())
+        .andWhere("created_at", "<=", moment().add(30, "days").format())
+        .orderBy("created_at", "desc")
+        .limit(size);
     }
     return await results;
   },

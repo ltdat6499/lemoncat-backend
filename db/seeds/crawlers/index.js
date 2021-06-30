@@ -197,8 +197,10 @@ const run = async () => {
 
 const checkTags = (tag) => {
   if (
-    tag.toLowerCase().includes("zombie") ||
-    tag.toLowerCase().includes("undead")
+    tag.toLowerCase().includes("the avengers") ||
+    tag.toLowerCase().includes("doctor strange") ||
+    tag.toLowerCase().includes("ant-man") || 
+    tag.toLowerCase().includes("thanos")
   )
     return true;
   return false;
@@ -209,17 +211,7 @@ const setTags = async () => {
   const flims = await knex("flims").select("id", "info", "data");
   for (const item of flims) {
     if (checkTags(item.info.name) || checkTags(item.info.summary)) {
-      item.info.tags.push("zombie");
-    }
-    for (const iterator of item.data.reviews.critics) {
-      if (checkTags(iterator.content)) {
-        item.info.tags.push("zombie");
-      }
-    }
-    for (const iterator of item.data.reviews.top_critics) {
-      if (checkTags(iterator.content)) {
-        item.info.tags.push("zombie");
-      }
+      item.info.tags.push("hero");
     }
     item.info.tags = _.uniq(item.info.tags);
     if (item.info.tags.length > 0)
@@ -228,7 +220,17 @@ const setTags = async () => {
   for (const item of results) {
     await knex("flims").update({ info: item.info }).where({ id: item.id });
   }
-  console.log("done");
+  console.log("PUSH DONE");
+};
+
+const resetTags = async () => {
+  const flims = await knex("flims").select("id", "info");
+  for (const item of flims) {
+    await knex("flims")
+      .update({ info: { ...item.info, ...{ tags: [] } } })
+      .where({ id: item.id });
+  }
+  console.log("RESET DONE");
 };
 
 setTags();
