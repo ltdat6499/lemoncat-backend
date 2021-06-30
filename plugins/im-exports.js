@@ -1,5 +1,6 @@
 const knex = require("../controllers/knex");
 const fs = require("fs");
+const readline = require("readline");
 
 const exportDatabase = async (table, limit) => {
   limit = limit || 500000;
@@ -43,14 +44,16 @@ const loadArray = async (name) => {
 };
 const importDatabase = async () => {
   const files = await fs.readdirSync("./");
-  for (const file of files) {
-    const data = await loadArray(file);
+  for (const file of files.filter((item) => item.includes(".txt"))) {
+    let data = await loadArray(file);
+    data = JSON.parse(data);
     await knex(file.split("_")[0]).insert(data);
     console.log(file, " DONE");
   }
   console.log("ALL DONE");
 };
 
+importDatabase();
 module.exports = {
   exportDatabase,
   importDatabase,
