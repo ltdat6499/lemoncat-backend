@@ -7,6 +7,11 @@ module.exports = {
       const { page, size, type, sortKey } = args;
       return await controllers.flims.get(page, size, type, sortKey);
     },
+    async flimBySlug(__, args) {
+      const { slug } = args;
+      const result = await controllers.getByParams("flims", { slug }, 1, 1);
+      return result[0];
+    },
     async flim(__, args) {
       const { id } = args;
       return await controllers.getById("flims", id);
@@ -31,6 +36,10 @@ module.exports = {
   },
   Flim: {
     whatToKnows: (parent) => parent.what_to_knows,
+    userReviewCount: async (parent) =>
+      await controllers.flims.countReviews("user", parent.id),
+    lemonReviewCount: async (parent) =>
+      await controllers.flims.countReviews("s-user", parent.id),
     userScore: async (parent) =>
       await controllers.flims.getScore("user", parent.id),
     lemonScore: async (parent) =>

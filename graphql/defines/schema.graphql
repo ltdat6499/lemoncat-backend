@@ -235,6 +235,8 @@ type Flim {
   data: FlimData
   userScore: Int
   lemonScore: Int
+  userReviewCount: Int
+  lemonReviewCount: Int
   slug: String
   createdAt: DateTime
   updatedAt: DateTime
@@ -329,6 +331,7 @@ type Query {
   action(id: String): Action
   flims(page: Int, size: Int, type: String, sortKey: FlimSortKey): [Flim]
   flim(id: String): Flim
+  flimBySlug(slug: String): Flim
   persons(page: Int, size: Int): [Person]
   person(id: String): Person
   posts(

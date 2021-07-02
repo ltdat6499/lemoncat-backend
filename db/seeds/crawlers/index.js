@@ -199,7 +199,7 @@ const checkTags = (tag) => {
   if (
     tag.toLowerCase().includes("the avengers") ||
     tag.toLowerCase().includes("doctor strange") ||
-    tag.toLowerCase().includes("ant-man") || 
+    tag.toLowerCase().includes("ant-man") ||
     tag.toLowerCase().includes("thanos")
   )
     return true;
@@ -233,4 +233,14 @@ const resetTags = async () => {
   console.log("RESET DONE");
 };
 
-setTags();
+const checkDistinctStreamings = async () => {
+  const flims = await knex("flims").select("streamings");
+  let results = [];
+  for (const flim of flims) {
+    results = results.concat(flim.streamings);
+    results = _.uniq(results);
+  }
+  console.log(results);
+};
+
+checkDistinctStreamings();

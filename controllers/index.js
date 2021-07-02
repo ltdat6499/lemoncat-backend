@@ -30,7 +30,7 @@ const getByParams = async (table, params, page, size) => {
     .select()
     .where(params)
     .limit(size)
-    .offset(page * size);
+    .offset((page - 1) * size);
 };
 
 const getByIds = async (table, ids) => {
@@ -148,6 +148,13 @@ const flims = {
         .limit(size);
     }
     return await results;
+  },
+  countReviews: async (type, id) => {
+    const result = await knex.raw(
+      `select count(*) from posts p where p.data->>'flim' = ? and p."type" = 'reviews' and exists (select * from users u where u."role" = ? and u.id = p.uid)`,
+      [id, type]
+    );
+    return result.rows[0].count;
   },
   getScore,
 };
