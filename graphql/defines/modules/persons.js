@@ -11,6 +11,11 @@ module.exports = {
       const { id } = args;
       return await controllers.getById("persons", id);
     },
+    async personBySlug(__, args) {
+      const { slug } = args;
+      const result = await controllers.getByParams("persons", { slug }, 1, 1);
+      return result[0];
+    },
   },
   Mutation: {
     async createAction(__, { input }) {
@@ -30,6 +35,7 @@ module.exports = {
     },
   },
   Person: {
+    flims: async (parent) => await controllers.persons.getFlims(parent.id),
     bornIn: (parent) => parent.born_in,
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,

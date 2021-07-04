@@ -79,6 +79,16 @@ const getScore = async (type = "s-user", id) => {
   return -1;
 };
 
+const persons = {
+  getFlims: async (id, page = "all", size = "all") => {
+    if (page === "all" && size === "all") {
+      return await knex("flims")
+        .select()
+        .whereRaw(`crews::text like '%${id}%'`);
+    }
+  },
+};
+
 const flims = {
   get: async (page = 1, size = 10, type = "movie", sortKey = "DATE") => {
     let results = knex("flims")
@@ -170,4 +180,5 @@ module.exports = {
   getByIds,
   posts,
   flims,
+  persons,
 };

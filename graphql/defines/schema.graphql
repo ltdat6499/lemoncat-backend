@@ -50,12 +50,12 @@ scalar Void
 type User {
   id: String
   email: String
-  password: String
+  # password: String
   name: String
   image: String
   status: Boolean
   role: String
-  data: UserData
+  # data: UserData
   slug: String
   createdAt: DateTime
   updatedAt: DateTime
@@ -263,6 +263,7 @@ type Person {
   summary: String
   images: [String]
   slug: String
+  flims: [Flim]
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -333,6 +334,7 @@ type Query {
   flim(id: String): Flim
   flimBySlug(slug: String): Flim
   persons(page: Int, size: Int): [Person]
+  personBySlug(slug: String): Person
   person(id: String): Person
   posts(
     page: Int
