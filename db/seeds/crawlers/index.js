@@ -289,4 +289,18 @@ const getDistintRole = async () => {
 // Director Screenwriter  Producer Cinematographer Production Design
 // Film Editor Original Music 'Casting' 'Art' 'Set Decoration' 'Key Makeup Artist'
 // Unit Manager Sound Mixer Costume Designer Assistant
-getDistintRole();
+
+const getDistintGenres = async () => {
+  let results = await knex("flims").select("info");
+  results = results.map((item) => item.info.genres);
+  let finalResults = [];
+  for (const item of results) {
+    for (const iterator of item) {
+      finalResults.push(iterator);
+    }
+  }
+  finalResults = _.uniq(finalResults);
+  await fs.writeFileSync(`roles.txt`, finalResults.join("\n"), "utf8");
+  console.log("done");
+};
+getDistintGenres();

@@ -7,6 +7,16 @@ module.exports = {
       const { page, size, type, sortKey } = args;
       return await controllers.flims.get(page, size, type, sortKey);
     },
+    async flimsByParams(__, args) {
+      const { page, size, type, sortKey, params } = args;
+      return await controllers.flims.getByParams(
+        page,
+        size,
+        type,
+        sortKey,
+        params
+      );
+    },
     async flimBySlug(__, args) {
       const { slug } = args;
       const result = await controllers.getByParams("flims", { slug }, 1, 1);

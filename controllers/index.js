@@ -159,6 +159,57 @@ const flims = {
     }
     return await results;
   },
+  getByParams: async (
+    page = 1,
+    size = 10,
+    type = "movie",
+    sortKey = "Release Date",
+    params = {
+      searchKey: "",
+      range: [1, 99],
+      genres: [],
+    }
+  ) => {
+    const range = [
+      `and CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) >= ${
+        params.range[0] !== 1 ? params.range[0] : 1
+      } `,
+      `and CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) <= ${
+        params.range[1] !== 99 ? params.range[1] : 99
+      } `,
+    ];
+    let sort = "ORDER BY table_score.score desc";
+    if (sortKey === "Release Date") sort = "ORDER BY flims.created_at desc";
+    let genres = [];
+    if (params.genres.length) {
+      for (const item of params.genres) {
+        genres.push(`and flims.info->>'genres' like '%${item}%'`);
+      }
+    }
+    genres = genres.join(" ");
+    let searchString = "";
+    if (params.searchKey.length)
+      searchString = `
+      and ( lower(flims.info->>'name') like '%${params.searchKey.toLowerCase()}%' or lower(flims.info->>'summary') like '%${params.searchKey.toLowerCase()}%' )
+      `;
+    const queryBuilder = `select *
+    from flims, (
+      select id, data->'rotten_tomatoes'->>'tomatometer_score' as score
+      from flims
+      where data->'rotten_tomatoes'->>'tomatometer_score' != ''
+      ${range[0]}
+      ${range[1]}
+    ) as table_score
+    where flims.id = table_score.id and flims.status = true and flims."type" = 'movie'
+    ${genres}
+    ${searchString}
+    ${sort}
+    limit ${size}
+    offset ${(page - 1) * size}
+    `;
+    const data = await knex.raw(queryBuilder);
+    return data.rows || [];
+  },
   countReviews: async (type, id) => {
     const result = await knex.raw(
       `select count(*) from posts p where p.data->>'flim' = ? and p."type" = 'reviews' and exists (select * from users u where u."role" = ? and u.id = p.uid)`,
