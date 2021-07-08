@@ -123,7 +123,8 @@ const flims = {
       results = await results;
       const res = [];
       for (const item of results) {
-        item.score = await getScore("s-user", item.id);
+        // item.score = await getScore("s-user", item.id);
+        item.score = item.data.rotten_tomatoes.tomatometer_score || 0;
         res.push(item);
       }
       return _.sortBy(res, ["score"]).reverse().splice(0, size);
@@ -131,7 +132,8 @@ const flims = {
       results = await results.orderBy("created_at", "desc").limit(100);
       const res = [];
       for (const item of results) {
-        item.score = await getScore("s-user", item.id);
+        // item.score = await getScore("s-user", item.id);
+        item.score = item.data.rotten_tomatoes.tomatometer_score || 0;
         res.push(item);
       }
       return _.sortBy(res, ["score"]).reverse().splice(0, size);
@@ -155,6 +157,11 @@ const flims = {
         .andWhere("created_at", ">=", moment().subtract(100, "days").format())
         .andWhere("created_at", "<=", moment().add(100, "days").format())
         .orderBy("created_at", "desc")
+        .limit(size);
+    } else if (sortKey === "RANDOMFRESH") {
+      results = results
+        .andWhere("created_at", ">=", moment().subtract(100, "days").format())
+        .andWhere("created_at", "<=", moment().add(100, "days").format())
         .limit(size);
     }
     return await results;

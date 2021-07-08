@@ -50,10 +50,10 @@ module.exports = {
       await controllers.flims.countReviews("user", parent.id),
     lemonReviewCount: async (parent) =>
       await controllers.flims.countReviews("s-user", parent.id),
-    userScore: async (parent) =>
-      await controllers.flims.getScore("user", parent.id),
-    lemonScore: async (parent) =>
-      await controllers.flims.getScore("s-user", parent.id),
+    userScore: (parent) => parent.data.rotten_tomatoes.audience_score || 0,
+    // await controllers.flims.getScore("user", parent.id),
+    lemonScore: (parent) => parent.data.rotten_tomatoes.tomatometer_score || 0,
+    // await controllers.flims.getScore("s-user", parent.id),
     createdAt: (parent) => parent.created_at,
     updatedAt: (parent) => parent.updated_at,
   },
