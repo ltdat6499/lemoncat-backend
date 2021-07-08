@@ -323,6 +323,11 @@ input PostInput {
   slug: String
 }
 
+type flimsResult {
+  results: [Flim]
+  count: Int
+}
+
 # ------------------------------------------------------------------------------------------------
 
 type Query {
@@ -330,19 +335,14 @@ type Query {
   user(id: String): User
   actions(page: Int, size: Int): [Action]
   action(id: String): Action
-  flims(
-    page: Int
-    size: Int
-    type: String
-    sortKey: FlimSortKey
-  ): [Flim]
+  flims(page: Int, size: Int, type: String, sortKey: FlimSortKey): [Flim]
   flimsByParams(
     page: Int
     size: Int
     type: String
     sortKey: String
     params: JSON
-  ): [Flim]
+  ): flimsResult
   flim(id: String): Flim
   flimBySlug(slug: String): Flim
   persons(page: Int, size: Int): [Person]

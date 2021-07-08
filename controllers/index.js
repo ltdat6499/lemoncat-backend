@@ -100,7 +100,7 @@ const flims = {
       results = results.orderBy("created_at", "desc").limit(size);
     else if (sortKey === "POPULARINTHEATERS") {
       results = results
-        .andWhere("created_at", ">=", moment().subtract(20, "days").format())
+        .andWhere("created_at", ">=", moment().subtract(80, "days").format())
         .andWhere("created_at", "<=", moment().format())
         .orderBy("created_at", "desc")
         .limit(size);
@@ -110,7 +110,7 @@ const flims = {
         .limit(size);
     } else if (sortKey === "NETFLIX") {
       results = results
-        .andWhere("created_at", ">=", moment().subtract(20, "days").format())
+        .andWhere("created_at", ">=", moment().subtract(80, "days").format())
         .andWhere("created_at", "<=", moment().format())
         .andWhereRaw(`streamings::text like '%netflix%'`)
         .orderBy("created_at", "desc")
@@ -139,7 +139,7 @@ const flims = {
       results = results.andWhereRaw(`info->>'tags' like '%hero%'`).limit(size);
     } else if (sortKey === "POPULARSTREAMINGMOVIES") {
       results = results
-        .andWhere("created_at", ">=", moment().subtract(20, "days").format())
+        .andWhere("created_at", ">=", moment().subtract(80, "days").format())
         .andWhere("created_at", "<=", moment().format())
         .andWhereRaw(`streamings::text like '%netflix%'`)
         .orderBy("created_at", "desc")
@@ -147,13 +147,13 @@ const flims = {
     } else if (sortKey === "NEWMOVIESTHISWEEK") {
       results = results
         .andWhere("created_at", ">=", moment().format())
-        .andWhere("created_at", "<=", moment().add(7, "days").format())
+        .andWhere("created_at", "<=", moment().add(365, "days").format())
         .orderBy("created_at", "desc")
         .limit(size);
     } else if (sortKey === "MOSTPOPULARMOVIESONLC") {
       results = results
-        .andWhere("created_at", ">=", moment().subtract(30, "days").format())
-        .andWhere("created_at", "<=", moment().add(30, "days").format())
+        .andWhere("created_at", ">=", moment().subtract(100, "days").format())
+        .andWhere("created_at", "<=", moment().add(100, "days").format())
         .orderBy("created_at", "desc")
         .limit(size);
     }
@@ -168,6 +168,7 @@ const flims = {
       searchKey: "",
       range: [1, 99],
       genres: [],
+      condition: "top_box_office",
     }
   ) => {
     const range = [
@@ -192,6 +193,85 @@ const flims = {
       searchString = `
       and ( lower(flims.info->>'name') like '%${params.searchKey.toLowerCase()}%' or lower(flims.info->>'summary') like '%${params.searchKey.toLowerCase()}%' )
       `;
+    let condition = "";
+    switch (params.condition) {
+      case "opening_this_week":
+        condition = `
+        and created_at between '${moment().format(
+          "DD-MM-YYYY H:mm:ss"
+        )}' and '${moment().add(365, "days").format("DD-MM-YYYY H:mm:ss")}'
+        `;
+        break;
+      case "top_box_office":
+        condition = `
+        and CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) >= 70
+        `;
+        break;
+      case "opening_soon":
+        condition = `
+        and created_at between '${moment().format(
+          "DD-MM-YYYY H:mm:ss"
+        )}' and '${moment().add(120, "days").format("DD-MM-YYYY H:mm:ss")}'
+        `;
+        break;
+      case "coming_soon":
+        condition = `
+        and created_at between '${moment().format(
+          "DD-MM-YYYY H:mm:ss"
+        )}' and '${moment().add(60, "days").format("DD-MM-YYYY H:mm:ss")}'
+        `;
+        break;
+      case "weekend_earnings":
+        condition = `
+        and (
+          info->>'genres' like '%kids & family%' or
+          info->>'genres' like '%adventure%' or
+          info->>'genres' like '%fantasy%'
+        )
+        `;
+        break;
+      case "certified_fresh":
+        condition = `
+        and CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) >= 80
+        `;
+        break;
+      case "netflix":
+        condition = `and streamings::text like '%netflix%'`;
+        break;
+      case "amazon_prime_video_us":
+        condition = `and streamings::text like '%amazon-prime-video-us%'`;
+        break;
+      case "disney":
+        condition = `and streamings::text like '%disney-plus-us%'`;
+        break;
+      case "hbo_max":
+        condition = `and streamings::text like '%hbo-max%'`;
+        break;
+      case "hbo_now":
+        condition = `and streamings::text like '%hbo-now%'`;
+        break;
+      case "fandango_now":
+        condition = `and streamings::text like '%fandango-now%'`;
+        break;
+      case "vudu":
+        condition = `and streamings::text like '%vudu%'`;
+        break;
+      case "apple_tv_plus_us":
+        condition = `and streamings::text like '%apple-tv-plus-us%'`;
+        break;
+      case "peacock":
+        condition = `and streamings::text like '%peacock%'`;
+        break;
+      case "hulu":
+        condition = `and streamings::text like '%hulu%'`;
+        break;
+      case "itunes":
+        condition = `and streamings::text like '%itunes%'`;
+        break;
+      default:
+        condition = ``;
+        break;
+    }
     const queryBuilder = `select *
     from flims, (
       select id, data->'rotten_tomatoes'->>'tomatometer_score' as score
@@ -199,6 +279,7 @@ const flims = {
       where data->'rotten_tomatoes'->>'tomatometer_score' != ''
       ${range[0]}
       ${range[1]}
+      ${condition}
     ) as table_score
     where flims.id = table_score.id and flims.status = true and flims."type" = 'movie'
     ${genres}
@@ -208,7 +289,23 @@ const flims = {
     offset ${(page - 1) * size}
     `;
     const data = await knex.raw(queryBuilder);
-    return data.rows || [];
+    const count = await knex.raw(`
+    select count(*)
+    from flims, (
+      select id, data->'rotten_tomatoes'->>'tomatometer_score' as score
+      from flims
+      where data->'rotten_tomatoes'->>'tomatometer_score' != ''
+      ${range[0]}
+      ${range[1]}
+      ${condition}
+    ) as table_score
+    where flims.id = table_score.id and flims.status = true and flims."type" = 'movie'
+    ${genres}
+    ${searchString}`);
+    return {
+      results: data.rows || [],
+      count: count.rows[0].count || 0,
+    };
   },
   countReviews: async (type, id) => {
     const result = await knex.raw(
