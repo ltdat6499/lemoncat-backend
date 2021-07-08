@@ -160,9 +160,12 @@ const flims = {
         .limit(size);
     } else if (sortKey === "RANDOMFRESH") {
       results = results
-        .andWhere("created_at", ">=", moment().subtract(100, "days").format())
-        .andWhere("created_at", "<=", moment().add(100, "days").format())
-        .limit(size);
+        .andWhereRaw(
+          "cast(data->'rotten_tomatoes'->>'tomatometer_score' as integer) >= 80"
+        )
+        .limit(100);
+      results = await results;
+      return _.shuffle(results).splice(0, size);
     }
     return await results;
   },
