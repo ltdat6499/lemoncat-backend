@@ -329,6 +329,18 @@ type flimsResult {
   count: Int
 }
 
+type TopFlimsPreview {
+  year1: [Flim]
+  year2: [Flim]
+  year3: [Flim]
+  year4: [Flim]
+  year5: [Flim]
+  topToday: [Flim]
+  topStreaming: [Flim]
+  topByYear: [Flim]
+  topForever: [Flim]
+}
+
 # ------------------------------------------------------------------------------------------------
 
 type Query {
@@ -346,6 +358,7 @@ type Query {
   ): flimsResult
   flim(id: String): Flim
   flimBySlug(slug: String): Flim
+  flimByTopPreview(slug: String): TopFlimsPreview
   persons(page: Int, size: Int): [Person]
   personBySlug(slug: String): Person
   person(id: String): Person

@@ -17,6 +17,20 @@ module.exports = {
         params
       );
     },
+    async flimByTopPreview(__, args) {
+      const results = {
+        year1: await controllers.flims.getFlimsByYear(10, 2021),
+        year2: await controllers.flims.getFlimsByYear(10, 2020),
+        year3: await controllers.flims.getFlimsByYear(10, 2019),
+        year4: await controllers.flims.getFlimsByYear(10, 2018),
+        year5: await controllers.flims.getFlimsByYear(10, 2017),
+        topToday: await controllers.flims.getFlimsTopToday(10),
+        topStreaming: await controllers.flims.getFlimsStreaming(10),
+        topByYear: await controllers.flims.getFlimsByYears(72),
+        topForever: await controllers.flims.getFlimsForever(20),
+      };
+      return results;
+    },
     async flimBySlug(__, args) {
       const { slug } = args;
       const result = await controllers.getByParams("flims", { slug }, 1, 1);

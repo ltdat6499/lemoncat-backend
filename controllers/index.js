@@ -89,6 +89,82 @@ const persons = {
   },
 };
 
+const getFlimsByYear = async (size = 100, year = 2021) => {
+  return await knex("flims")
+    .select()
+    .whereRaw(
+      `
+        info->>'theaters_date' like '%${year}%'
+      `
+    )
+    .orderBy("created_at", "desc")
+    .limit(size);
+};
+
+const getFlimsByYears = async (size = 20) => {
+  const results = await knex.raw(`
+    select *
+    from flims m,(
+      select distinct on (m.year) *
+      from (
+        select id, max(distinct data->'rotten_tomatoes'->>'tomatometer_score') as score, split_part(info->>'theaters_date', ', ', 2) as year
+        from flims
+        where data->'rotten_tomatoes'->>'tomatometer_score' != ''
+        and CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) >= 80
+        group by year, id
+        order by score desc
+      ) m
+      order by m.year, m.score desc
+    ) ids
+    where ids.id = m.id
+    limit ${size}
+  `);
+  return results.rows || [];
+};
+
+const getFlimsForever = async (size = 20) => {
+  const results = await knex.raw(`
+    select *
+    from flims m,(
+      select id, CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) as score, split_part(info->>'theaters_date', ', ', 2) as year
+      from flims
+      where data->'rotten_tomatoes'->>'tomatometer_score' != ''
+      and CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) >= 95
+    ) ids
+    where ids.id = m.id
+    order by score desc, year desc
+    limit ${size}
+  `);
+  return results.rows || [];
+};
+
+const getFlimsTopToday = async (size = 100) => {
+  return await knex("flims")
+    .select()
+    .whereRaw(`data->'rotten_tomatoes'->>'tomatometer_score' != ''`)
+    .andWhereRaw(
+      `
+        CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) >= 80
+      `
+    )
+    .orderBy("created_at", "desc")
+    .limit(size);
+};
+
+const getFlimsStreaming = async (size = 100) => {
+  return await knex("flims")
+    .select()
+    .whereRaw(`data->'rotten_tomatoes'->>'tomatometer_score' != ''`)
+    .andWhereRaw(
+      `
+        CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) >= 80
+      `
+    )
+    .andWhereRaw(`streamings::text like '%disney-plus-us%'`)
+    .orderBy("created_at", "desc")
+    .limit(size);
+};
+
 const flims = {
   get: async (page = 1, size = 10, type = "movie", sortKey = "DATE") => {
     let results = knex("flims")
@@ -325,6 +401,11 @@ const flims = {
     return result.rows[0].count;
   },
   getScore,
+  getFlimsByYear,
+  getFlimsTopToday,
+  getFlimsStreaming,
+  getFlimsByYears,
+  getFlimsForever,
 };
 
 module.exports = {
