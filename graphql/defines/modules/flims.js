@@ -17,6 +17,15 @@ module.exports = {
         params
       );
     },
+    async flimByTop(__, args) {
+      const { year, genre } = args;
+      const results = {
+        flims: await controllers.flims.getFlimsByTop(year, genre),
+        topToday: await controllers.flims.getFlimsTopToday(10),
+        topStreaming: await controllers.flims.getFlimsStreaming(10),
+      };
+      return results;
+    },
     async flimByTopPreview(__, args) {
       const results = {
         year1: await controllers.flims.getFlimsByYear(10, 2021),

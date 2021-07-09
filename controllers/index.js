@@ -89,6 +89,25 @@ const persons = {
   },
 };
 
+const getFlimsByTop = async (year = "all", genre = "all") => {
+  let results = knex("flims")
+    .select()
+    .whereRaw(`data->'rotten_tomatoes'->>'tomatometer_score' != ''`);
+  if (year !== "all") {
+    results = results.andWhereRaw(`created_at::text like '%${year}%'`);
+  }
+  if (genre !== "all") {
+    results = results.andWhereRaw(`info->>'genres' like '%${genre}%'`);
+  }
+  results = await results;
+  results = results.map((result) => {
+    result.score = parseInt(result.data.rotten_tomatoes.tomatometer_score);
+    return result;
+  });
+  results = _.sortBy(results, ["score"]).reverse();
+  return _.slice(results, 0, 100);
+};
+
 const getFlimsByYear = async (size = 100, year = 2021) => {
   return await knex("flims")
     .select()
@@ -102,7 +121,7 @@ const getFlimsByYear = async (size = 100, year = 2021) => {
 };
 
 const getFlimsByYears = async (size = 20) => {
-  const results = await knex.raw(`
+  let results = await knex.raw(`
     select *
     from flims m,(
       select distinct on (m.year) *
@@ -117,13 +136,18 @@ const getFlimsByYears = async (size = 20) => {
       order by m.year, m.score desc
     ) ids
     where ids.id = m.id
-    limit ${size}
   `);
-  return results.rows || [];
+  results = await results;
+  results = results.rows.map((result) => {
+    result.score = parseInt(result.data.rotten_tomatoes.tomatometer_score);
+    return result;
+  });
+  results = _.sortBy(results, ["score"]).reverse();
+  return _.slice(results, 0, size);
 };
 
 const getFlimsForever = async (size = 20) => {
-  const results = await knex.raw(`
+  let results = await knex.raw(`
     select *
     from flims m,(
       select id, CAST(data->'rotten_tomatoes'->>'tomatometer_score' AS integer) as score, split_part(info->>'theaters_date', ', ', 2) as year
@@ -135,7 +159,13 @@ const getFlimsForever = async (size = 20) => {
     order by score desc, year desc
     limit ${size}
   `);
-  return results.rows || [];
+  results = await results;
+  results = results.rows.map((result) => {
+    result.score = parseInt(result.data.rotten_tomatoes.tomatometer_score);
+    return result;
+  });
+  results = _.sortBy(results, ["score"]).reverse();
+  return _.slice(results, 0, size);
 };
 
 const getFlimsTopToday = async (size = 100) => {
@@ -406,6 +436,7 @@ const flims = {
   getFlimsStreaming,
   getFlimsByYears,
   getFlimsForever,
+  getFlimsByTop,
 };
 
 module.exports = {
