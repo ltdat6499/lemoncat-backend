@@ -26,6 +26,10 @@ module.exports = {
       };
       return results;
     },
+    async alsoLikeFlims(__, args) {
+      const { id } = args;
+      return await controllers.flims.getRelativeFlims(id);
+    },
     async flimByTopPreview(__, args) {
       const results = {
         year1: await controllers.flims.getFlimsByYear(10, 2021),

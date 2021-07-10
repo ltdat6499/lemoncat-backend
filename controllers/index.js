@@ -195,6 +195,39 @@ const getFlimsStreaming = async (size = 100) => {
     .limit(size);
 };
 
+const getRelativeFlims = async (id) => {
+  const data = await knex("flims").select().where({ id }).first();
+  const resultsByName = await knex("flims").select().whereRaw(`
+    lower(info->>'name') like '%${
+      data.info.name.toLowerCase().replace(/[0-9]/g, "").trim() || ""
+    }%'
+  `);
+  const resultsBySummary = await knex("flims").select().whereRaw(`
+    lower(info->>'summary') like '%${
+      data.info.name.toLowerCase().replace(/[0-9]/g, "").trim() || ""
+    }%'
+  `);
+  const resultsByCrews = await knex("flims").select().whereRaw(`
+    crews::text like '%${JSON.stringify(data.crews[0]) || ""}%'
+  `);
+  const director = _.find(data.crews, ["role", "Director"]);
+  let resultsByDirector = [];
+  if (director) {
+    resultsByDirector = await knex("flims").select().whereRaw(`
+      crews::text like '%${director.person}%'
+    `);
+  }
+
+  let results = resultsByName
+    .concat(resultsByCrews)
+    .concat(resultsBySummary)
+    .concat(resultsByDirector);
+  results = results.map((item) => JSON.stringify(item));
+  results = _.uniq(results);
+  results = results.map((item) => JSON.parse(item));
+  return results;
+};
+
 const flims = {
   get: async (page = 1, size = 10, type = "movie", sortKey = "DATE") => {
     let results = knex("flims")
@@ -437,6 +470,7 @@ const flims = {
   getFlimsByYears,
   getFlimsForever,
   getFlimsByTop,
+  getRelativeFlims,
 };
 
 module.exports = {

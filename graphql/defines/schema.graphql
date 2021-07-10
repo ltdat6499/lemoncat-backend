@@ -366,6 +366,7 @@ type Query {
   flimBySlug(slug: String): Flim
   flimByTopPreview(slug: String): TopFlimsPreview
   flimByTop(year: String, genre: String): TopFlims
+  alsoLikeFlims(id: String): [Flim]
   persons(page: Int, size: Int): [Person]
   personBySlug(slug: String): Person
   person(id: String): Person
