@@ -347,6 +347,13 @@ type TopFlims {
   topStreaming: [Flim]
 }
 
+type SideFlims {
+  byDate: [Flim]
+  byFresh: [Flim]
+  byFuture: [Flim]
+  byPopular: [Flim]
+}
+
 # ------------------------------------------------------------------------------------------------
 
 type Query {
@@ -366,6 +373,7 @@ type Query {
   flimBySlug(slug: String): Flim
   flimByTopPreview(slug: String): TopFlimsPreview
   flimByTop(year: String, genre: String): TopFlims
+  sideMenuFlims(slug: String): SideFlims
   alsoLikeFlims(id: String): [Flim]
   persons(page: Int, size: Int): [Person]
   personBySlug(slug: String): Person

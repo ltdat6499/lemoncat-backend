@@ -30,6 +30,29 @@ module.exports = {
       const { id } = args;
       return await controllers.flims.getRelativeFlims(id);
     },
+    async sideMenuFlims(__, args) {
+      return {
+        byDate: await controllers.flims.get(1, 14, "movie", "DATE"),
+        byFresh: await controllers.flims.get(
+          1,
+          14,
+          "movie",
+          "NEWLYCERTIFIEDFRESH"
+        ),
+        byFuture: await controllers.flims.get(
+          1,
+          14,
+          "movie",
+          "NEWMOVIESTHISWEEK"
+        ),
+        byPopular: await controllers.flims.get(
+          2,
+          14,
+          "movie",
+          "POPULARSTREAMINGMOVIES"
+        ),
+      };
+    },
     async flimByTopPreview(__, args) {
       const results = {
         year1: await controllers.flims.getFlimsByYear(10, 2021),
