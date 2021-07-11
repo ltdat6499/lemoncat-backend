@@ -62,6 +62,7 @@
     "require-text": "0.0.1",
     "selenium-webdriver": "^4.0.0-beta.4",
     "striptags": "^3.2.0",
-    "uuid": "^8.3.2"
+    "uuid": "^8.3.2",
+    "wilson-score-rank": "^2.0.1"
   }
 }

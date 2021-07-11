@@ -303,4 +303,27 @@ const getDistintGenres = async () => {
   await fs.writeFileSync(`roles.txt`, finalResults.join("\n"), "utf8");
   console.log("done");
 };
-getDistintGenres();
+
+const mapping = async () => {
+  const results = await knex("posts")
+    .select("id", "slug")
+    .where({ type: "review" });
+  // for (const item of results) {
+  //   await knex("posts")
+  //     .update({ slug: item.slug + "-" + item.id })
+  //     .where({ id: item.id });
+  // }
+  // const distintResults = await knex("posts")
+  //   .select("id", "slug")
+  //   .distinctOn("slug")
+  //   .where({ type: "review" });
+  // console.log("🚀 ------------------------------");
+  // console.log(
+  //   "🚀 ~ mapping ~ results",
+  //   distintResults.length,
+  //   fullResults.length
+  // );
+  // console.log("🚀 ------------------------------");
+
+  console.log("done");
+};
