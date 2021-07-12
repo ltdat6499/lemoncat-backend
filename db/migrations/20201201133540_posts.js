@@ -10,6 +10,7 @@ exports.up = async (knex) => {
       data jsonb,
       tags TEXT[],
       slug TEXT,
+      score TEXT,
       status BOOL DEFAULT TRUE,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()

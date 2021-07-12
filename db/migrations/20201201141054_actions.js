@@ -8,6 +8,7 @@ exports.up = async (knex) => {
       parent BIGINT,
       uid BIGINT,
       data TEXT,
+      score TEXT,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )
