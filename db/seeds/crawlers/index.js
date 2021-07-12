@@ -335,61 +335,61 @@ const mapping = async () => {
 // angry 4
 const wilsonScore = require("wilson-score-rank");
 
-const setScoreChildComments = async () => {
-  let comments = await knex("actions")
-    .select("id")
-    .where({ type: "comment", parent_type: "comment" });
+// const setScoreChildComments = async () => {
+//   let comments = await knex("actions")
+//     .select("id")
+//     .where({ type: "comment", parent_type: "comment" });
 
-  for (const item of comments) {
-    let interacts = await knex("actions")
-      .select("data", "uid")
-      .where({ parent: item.id, type: "interact" });
-    for (const interact of interacts) {
-      const userElo = await knex("users")
-        .select("data")
-        .where({ id: interact.uid });
-      interact.elo = parseInt(userElo[0].data.elo) / 100;
-    }
-    let total = 0,
-      positive = 0;
-    for (const interact of interacts) {
-      switch (interact.data) {
-        case "love":
-          total += 4 * interact.elo;
-          positive += 4 * interact.elo;
-          break;
-        case "care":
-          total += 3 * interact.elo;
-          positive += 3 * interact.elo;
-          break;
-        case "wow":
-          total += 2 * interact.elo;
-          positive += 2 * interact.elo;
-          break;
-        case "like":
-          total += 4 * interact.elo;
-          positive += 2 * interact.elo;
-          break;
-        case "dislike":
-          total += 2 * interact.elo;
-          break;
-        case "angry":
-          total += 4 * interact.elo;
-          break;
-        default:
-          break;
-      }
-    }
-    const score = wilsonScore.lowerBound(positive, total);
-    await knex("actions")
-      .update({
-        score,
-      })
-      .where({ id: item.id });
-    console.log({ id: item.id, score });
-  }
-  console.log("DONE");
-};
+//   for (const item of comments) {
+//     let interacts = await knex("actions")
+//       .select("data", "uid")
+//       .where({ parent: item.id, type: "interact" });
+//     for (const interact of interacts) {
+//       const userElo = await knex("users")
+//         .select("data")
+//         .where({ id: interact.uid });
+//       interact.elo = parseInt(userElo[0].data.elo) / 100;
+//     }
+//     let total = 0,
+//       positive = 0;
+//     for (const interact of interacts) {
+//       switch (interact.data) {
+//         case "love":
+//           total += 4 * interact.elo;
+//           positive += 4 * interact.elo;
+//           break;
+//         case "care":
+//           total += 3 * interact.elo;
+//           positive += 3 * interact.elo;
+//           break;
+//         case "wow":
+//           total += 2 * interact.elo;
+//           positive += 2 * interact.elo;
+//           break;
+//         case "like":
+//           total += 4 * interact.elo;
+//           positive += 2 * interact.elo;
+//           break;
+//         case "dislike":
+//           total += 2 * interact.elo;
+//           break;
+//         case "angry":
+//           total += 4 * interact.elo;
+//           break;
+//         default:
+//           break;
+//       }
+//     }
+//     const score = wilsonScore.lowerBound(positive, total);
+//     await knex("actions")
+//       .update({
+//         score,
+//       })
+//       .where({ id: item.id });
+//     console.log({ id: item.id, score });
+//   }
+//   console.log("DONE");
+// };
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
@@ -417,11 +417,10 @@ const pushData = async (data) => {
       results = results.concat(iterator.interacts);
     }
   }
-  const result = await knex("actions").insert(results);
+  await knex("actions").insert(results);
   await knex("posts")
     .update({ score: data.score + "" })
     .where({ id: data.postId });
-  console.log(result.rowCount);
 };
 
 const getScore = (interacts) => {
@@ -491,10 +490,10 @@ const executeScript = async () => {
   let news = await loadArray("./data/news.txt");
   news = _.shuffle(news);
 
-  let reviews = await loadArray("./data/reviews.txt");
-  reviews = _.shuffle(reviews);
+  // let reviews = await loadArray("./data/reviews.txt");
+  // reviews = _.shuffle(reviews);
   for (const newsId of news) {
-    const splitReviews = reviews.splice(0, 17);
+    // const splitReviews = reviews.splice(0, 1);
     const maxComments = getRandomInt(7, 15);
     const result = {
       postId: newsId,
@@ -555,12 +554,29 @@ const executeScript = async () => {
     // -----------------------------------------------------------------
     pushData(result);
     console.log(`News: ${newsId}`);
-    for (const reviewId of splitReviews) {
-      const data = await cloneData(result, reviewId);
-      pushData(data);
-      console.log(`Reviews: ${reviewId}`);
-    }
+    // for (const reviewId of splitReviews) {
+    //   const data = await cloneData(result, reviewId);
+    //   pushData(data);
+    //   console.log(`Reviews: ${reviewId}`);
+    // }
   }
+  console.log("DONE");
+};
+
+const getNull = async () => {
+  const data = await knex.raw(
+    `select id from posts where score is null and "type" = 'review'`
+  );
+  for (const item of data.rows) {
+    await fs.appendFileSync(`./data/reviews.txt`, item.id + "\n", "utf8");
+  }
+  const data2 = await knex.raw(
+    `select id from posts where score is null and "type" = 'news'`
+  );
+  for (const item of data2.rows) {
+    await fs.appendFileSync(`./data/news.txt`, item.id + "\n", "utf8");
+  }
+  console.log("DONE");
 };
 
 executeScript();
