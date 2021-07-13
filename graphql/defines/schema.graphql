@@ -401,6 +401,7 @@ type Query {
   latestGuides(slug: String): [Post]
   menuPosts(slug: String): MenuPosts
   freshNewsInWeek(slug: String): [Post]
+  postBySlug(slug: String): Post
 }
 
 type Mutation {

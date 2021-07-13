@@ -1,5 +1,6 @@
 const controllers = require("../../../controllers");
 const tools = require("../../../global");
+const cheerio = require("cheerio");
 
 module.exports = {
   Query: {
@@ -22,6 +23,17 @@ module.exports = {
     },
     async freshNewsInWeek(__, args) {
       return await controllers.posts.freshNewsInWeek();
+    },
+    async postBySlug(__, args) {
+      const { slug } = args;
+      let result = await controllers.getByParams("posts", { slug }, 1, 1);
+      result = result[0];
+      const $ = cheerio.load(result.content);
+      const content = $("div[class='panel-body']")
+        .find("div[class='articleContentBody']")
+        .html();
+      if (content) result.content = content;
+      return result;
     },
   },
   Mutation: {
