@@ -11,6 +11,15 @@ module.exports = {
       const { id } = args;
       return await controllers.getById("posts", id);
     },
+    async latestNews(__, args) {
+      return await controllers.posts.latestNews();
+    },
+    async latestGuides(__, args) {
+      return await controllers.posts.latestGuides();
+    },
+    async menuPosts(__, args) {
+      return await controllers.posts.menuPosts();
+    },
   },
   Mutation: {
     async createPost(__, { input }) {
@@ -32,7 +41,12 @@ module.exports = {
   Post: {
     sideTitle: (parent) => {
       let result = tools.htmlToText(parent.content).split(". ");
-      result = result[result.length - 4 >= 0 ? result.length - 4 : 0];
+      result = result[result.length - 5 >= 0 ? result.length - 5 : 0];
+      result = result.replace(
+        /[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi,
+        " "
+      );
+      if (result.length > 110) return result.substring(0, 110) + " ...";
       return result;
     },
     rawContent: (parent) => tools.htmlToText(parent.content),

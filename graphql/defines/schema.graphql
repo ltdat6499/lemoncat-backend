@@ -309,6 +309,7 @@ type Post {
   tags: [String]
   status: Boolean
   slug: String
+  score: String
   createdAt: DateTime
   updatedAt: DateTime
 }
@@ -354,6 +355,12 @@ type SideFlims {
   byPopular: [Flim]
 }
 
+type MenuPosts {
+  frames: [Post]
+  guides: [Post]
+  latest: [Post]
+}
+
 # ------------------------------------------------------------------------------------------------
 
 type Query {
@@ -386,6 +393,9 @@ type Query {
     sortKey: PostSortKey
   ): [Post]
   post(id: String): Post
+  latestNews(slug: String): [Post]
+  latestGuides(slug: String): [Post]
+  menuPosts(slug: String): MenuPosts
 }
 
 type Mutation {

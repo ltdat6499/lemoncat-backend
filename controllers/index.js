@@ -62,6 +62,74 @@ const posts = {
     if (sortKey === "DATE") results = results.orderBy("updated_at", "desc");
     return await results;
   },
+  latestNews: async () => {
+    let results = await knex("posts")
+      .select()
+      .where({ type: "news" })
+      .orderBy("created_at", "desc")
+      .limit(6);
+    results = results.map((item) => {
+      item.score = parseFloat(item.score);
+      return item;
+    });
+    return _.sortBy(results, ["score"]).reverse();
+  },
+  latestGuides: async () => {
+    let results = await knex("posts")
+      .select()
+      .where({ type: "news" })
+      .andWhereRaw(`data->>'section' = 'Binge Guide'`)
+      .orderBy("created_at", "desc")
+      .limit(4);
+    results = results.map((item) => {
+      item.score = parseFloat(item.score);
+      return item;
+    });
+    return _.sortBy(results, ["score"]).reverse();
+  },
+  menuPosts: async () => {
+    let result = {
+      frames: await knex.raw(`
+        select * 
+        from posts p, (select id, role from users) u 
+        where p.uid = u.id and role = 's-user' and p."type" ='news' 
+                           and p.data->>'section' = '24 Frames'
+        order by p.created_at desc 
+        limit 2
+      `),
+      guides: await knex.raw(`
+        select * 
+        from posts p, (select id, role from users) u 
+        where p.uid = u.id and role = 's-user' and p."type" ='news' 
+                          and p.data->>'section' = 'Binge Guide'
+        order by p.created_at desc 
+        limit 2
+      `),
+      latest: await knex.raw(`
+        select * 
+        from posts p, (select id, role from users) u 
+        where p.uid = u.id and role = 's-user' and p."type" ='news' 
+        order by p.created_at desc 
+        limit 2
+      `),
+    };
+    result.frames = result.frames.rows.map((item) => {
+      item.score = parseFloat(item.score);
+      return item;
+    });
+    result.guides = result.guides.rows.map((item) => {
+      item.score = parseFloat(item.score);
+      return item;
+    });
+    result.latest = result.latest.rows.map((item) => {
+      item.score = parseFloat(item.score);
+      return item;
+    });
+    result.frames = _.sortBy(result.frames, ["score"]).reverse();
+    result.guides = _.sortBy(result.guides, ["score"]).reverse();
+    result.latest = _.sortBy(result.latest, ["score"]).reverse();
+    return result;
+  },
 };
 
 const getScore = async (type = "s-user", id) => {
