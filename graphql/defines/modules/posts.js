@@ -53,7 +53,41 @@ module.exports = {
       return result.length;
     },
   },
+  Interact: {
+    user: async (parent) => await controllers.getById("users", parent.uid),
+    emoji: (parent) => parent.data,
+  },
+  Comment: {
+    user: async (parent) => await controllers.getById("users", parent.uid),
+    content: (parent) => parent.data,
+    childComments: async (parent) =>
+      await controllers.getByParamsUnlimit("actions", {
+        type: "comment",
+        parent_type: "comment",
+        parent: parent.id,
+      }),
+    interacts: async (parent) =>
+      await controllers.getByParamsUnlimit("actions", {
+        type: "interact",
+        parent_type: "comment",
+        parent: parent.id,
+      }),
+    createdAt: (parent) => parent.created_at,
+    updatedAt: (parent) => parent.updated_at,
+  },
   Post: {
+    comments: async (parent) =>
+      await controllers.getByParamsUnlimit("actions", {
+        type: "comment",
+        parent_type: "post",
+        parent: parent.id,
+      }),
+    interacts: async (parent) =>
+      await controllers.getByParamsUnlimit("actions", {
+        type: "interact",
+        parent_type: "post",
+        parent: parent.id,
+      }),
     sideTitle: (parent) => {
       let result = tools.htmlToText(parent.content).split(". ");
       result = result[result.length - 5 >= 0 ? result.length - 5 : 0];

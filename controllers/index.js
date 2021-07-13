@@ -42,6 +42,10 @@ const getByIds = async (table, ids) => {
   return results;
 };
 
+const getByParamsUnlimit = async (table, params) => {
+  return await knex(table).select().where(params);
+};
+
 const posts = {
   get: async (page = 1, size = 10, type = "news", section = "24 Frames") => {
     const count = await knex("posts")
@@ -563,4 +567,5 @@ module.exports = {
   posts,
   flims,
   persons,
+  getByParamsUnlimit,
 };

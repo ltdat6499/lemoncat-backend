@@ -293,8 +293,22 @@ type PostData {
   score: Int
 }
 
-enum PostSortKey {
-  DATE
+type Interact {
+  id: String
+  user: User
+  emoji: String
+  score: String
+}
+
+type Comment {
+  id: String
+  user: User
+  content: String
+  score: String
+  childComments: [Comment]
+  interacts: [Interact]
+  createdAt: DateTime
+  updatedAt: DateTime
 }
 
 type Post {
@@ -310,6 +324,8 @@ type Post {
   status: Boolean
   slug: String
   score: String
+  comments: [Comment]
+  interacts: [Interact]
   createdAt: DateTime
   updatedAt: DateTime
 }
