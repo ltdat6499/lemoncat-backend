@@ -154,11 +154,11 @@ const importDatabase = async () => {
 // esExportFlims("flims", 1000);
 // esExportPosts("posts", 400);
 
-// exportDatabase("actions", 10000)
-// exportDatabase("flims", 500)
-// exportDatabase("persons", 1000)
-// exportDatabase("posts", 100)
-// exportDatabase("users", 1000)
+// exportDatabase("actions")
+// exportDatabase("flims", 1000)
+// exportDatabase("persons", 5000)
+// exportDatabase("posts", 2000)
+// exportDatabase("users", 5000)
 module.exports = {
   exportDatabase,
   importDatabase,
