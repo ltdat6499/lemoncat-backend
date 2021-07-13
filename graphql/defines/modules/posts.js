@@ -4,8 +4,8 @@ const tools = require("../../../global");
 module.exports = {
   Query: {
     async posts(__, args) {
-      const { page, size, type, collection, sortKey } = args;
-      return await controllers.posts.get(page, size, type, collection, sortKey);
+      const { page, size, type, section } = args;
+      return await controllers.posts.get(page, size, type, section);
     },
     async post(__, args) {
       const { id } = args;
@@ -19,6 +19,9 @@ module.exports = {
     },
     async menuPosts(__, args) {
       return await controllers.posts.menuPosts();
+    },
+    async freshNewsInWeek(__, args) {
+      return await controllers.posts.freshNewsInWeek();
     },
   },
   Mutation: {

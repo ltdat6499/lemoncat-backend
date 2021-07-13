@@ -330,6 +330,11 @@ type flimsResult {
   count: Int
 }
 
+type postsResult {
+  results: [Post]
+  count: Int
+}
+
 type TopFlimsPreview {
   year1: [Flim]
   year2: [Flim]
@@ -389,13 +394,13 @@ type Query {
     page: Int
     size: Int
     type: String
-    collection: String
-    sortKey: PostSortKey
-  ): [Post]
+    section: String
+  ): postsResult
   post(id: String): Post
   latestNews(slug: String): [Post]
   latestGuides(slug: String): [Post]
   menuPosts(slug: String): MenuPosts
+  freshNewsInWeek(slug: String): [Post]
 }
 
 type Mutation {

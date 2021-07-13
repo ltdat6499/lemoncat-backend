@@ -43,24 +43,20 @@ const getByIds = async (table, ids) => {
 };
 
 const posts = {
-  get: async (
-    page = 1,
-    size = 10,
-    type = "news",
-    collection,
-    sortKey = "DATE"
-  ) => {
+  get: async (page = 1, size = 10, type = "news", section = "24 Frames") => {
+    const count = await knex("posts")
+      .count("id")
+      .where({ status: true, type })
+      .andWhereRaw(`data->>'section' = ?`, [section]);
+
     let results = knex("posts")
       .select()
       .where({ status: true, type })
+      .andWhereRaw(`data->>'section' = ?`, [section])
+      .orderBy("created_at", "desc")
       .limit(size)
       .offset((page - 1) * size);
-    if (type === "news" && collection && collection.length)
-      results = results.andWhereRaw("cast(data->>'section' as text) = ?", [
-        collection,
-      ]);
-    if (sortKey === "DATE") results = results.orderBy("updated_at", "desc");
-    return await results;
+    return { results, count: count[0].count || 0 };
   },
   latestNews: async () => {
     let results = await knex("posts")
@@ -129,6 +125,20 @@ const posts = {
     result.guides = _.sortBy(result.guides, ["score"]).reverse();
     result.latest = _.sortBy(result.latest, ["score"]).reverse();
     return result;
+  },
+  freshNewsInWeek: async () => {
+    let results = await knex("posts")
+      .select()
+      .where({ type: "news" })
+      .andWhere("created_at", ">=", moment().subtract(80, "days").format())
+      .andWhere("created_at", "<=", moment().format())
+      .orderBy("created_at", "desc")
+      .limit(100);
+    results = results.map((item) => {
+      item.score = parseFloat(item.score);
+      return item;
+    });
+    return _.sortBy(results, ["score"]).reverse().splice(0, 8);
   },
 };
 
