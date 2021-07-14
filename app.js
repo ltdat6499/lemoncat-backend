@@ -9,6 +9,8 @@ const app = express();
 const session = require("express-session");
 const passport = require("passport");
 const configs = require("./configs");
+const jwt = require("./middlewares/jwt/");
+const controller = require("./controllers");
 const { setup, exportPassport } = require("./middlewares/").passports;
 
 app.use(cors());
@@ -43,7 +45,6 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.static(path.join(__dirname, "downloads")));
 
-
 app.post("/login", exportPassport.local, (req, res) => res.send(req.user));
 app.get("/login", (req, res) => res.send("auth failed"));
 app.get("/auth/facebook", exportPassport.facebookAuth);
@@ -56,7 +57,12 @@ app.get("/auth/google", exportPassport.googleAuth);
 app.get("/auth/google/callback", exportPassport.googleCallback, (req, res) =>
   res.redirect("http://localhost:3842/#/login?token=" + req.user)
 );
-
+app.post("/profile", async (req, res) => {
+  const { data, err } = jwt.verify(req.body.token, configs.signatureKey);
+  if (err.length) return res.json({ error: err });
+  const user = await controller.getById("users", data.id);
+  return res.json({ data: user });
+});
 app.use("/graphql", router.graphql);
 
 // catch 404 and forward to error handler

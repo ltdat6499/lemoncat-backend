@@ -134,7 +134,7 @@ const deserialize = async (token, done) => {
   try {
     const { data, err } = jwt.verify(token, config.signatureKey);
     if (err) return done(err);
-    const user = await controller.users.getById(data.id);
+    const user = await controller.getById("users", data.id);
     return done(null, user);
   } catch (err) {
     return done(err);
