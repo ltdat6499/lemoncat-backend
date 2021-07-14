@@ -8,6 +8,7 @@ const config = require("../../configs");
 const tools = require("../../global");
 const controller = require("../../controllers");
 const jwt = require("../jwt");
+const _ = require("lodash");
 
 const sleep = async (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
@@ -19,7 +20,7 @@ const local = new LocalStrategy(
     session: false,
   },
   async (req, email, password, done) => {
-    const user = tools._.head(await controller.users.getByParams({ email }));
+    const user = _.head(await controller.getByParams("users", { email }, 1, 1));
     if (!user) return done(null, false, { message: "Incorrect email." });
     const passwordVerify = await tools.checkPassword(password, user.password);
     if (!passwordVerify)
@@ -37,30 +38,33 @@ const google = new GoogleStrategy(
   },
   async (token, tokenSecret, profile, done) => {
     if (token && profile) {
-      let user = await controller.users.getByParams({
-        email: profile._json.email,
-      });
+      let user = await controller.getByParams(
+        "users",
+        {
+          email: profile._json.email,
+        },
+        1,
+        1
+      );
       if (user.length <= 0) {
-        const id = tools.genId();
-        await sleep(500);
-        user = await controller.users.create({
-          id,
+        user = await controller.create("users", {
           name: profile.displayName,
           email: profile._json.email,
-          image: JSON.stringify({
-            id: tools.genId(),
-            src: profile._json.picture,
-          }),
+          image: profile._json.picture,
           status: true,
-          elo: {},
-          otp: {},
+          slug: profile._json.email,
+          data: {
+            elo: 100,
+            reports: [],
+            active_at: "1624486719882",
+          },
           login_data: JSON.stringify({
             ...profile._json,
             token,
           }),
         });
       } else {
-        user = tools._.head(user);
+        user = _.head(user);
       }
       return done(null, jwt.sign({ id: user.id }, config.signatureKey));
     }
@@ -77,11 +81,15 @@ const facebook = new FacebookStrategy(
   },
   async (accessToken, refreshToken, profile, done) => {
     if (accessToken && profile) {
-      let user = await controller.users.getByParams({
-        email: profile._json.email,
-      });
+      let user = await controller.getByParams(
+        "users",
+        {
+          email: profile._json.email,
+        },
+        1,
+        1
+      );
       if (user.length <= 0) {
-        const id = tools.genId();
         const path = __dirname + `/../../public/${profile._json.id}.jpeg`;
         await tools.download(
           `https://graph.facebook.com/${profile._json.id}/picture?type=large&access_token=${accessToken}`,
@@ -90,14 +98,17 @@ const facebook = new FacebookStrategy(
             const avataInfo = await flickr.upload(`${profile._json.id}.jpeg`);
             await tools.deleteFile(path);
             if (avataInfo) {
-              user = await controller.users.create({
-                id,
+              user = await controller.create("users", {
                 name: profile._json.first_name + " " + profile._json.last_name,
                 email: profile._json.email,
                 image: JSON.stringify(avataInfo),
                 status: true,
-                elo: {},
-                otp: {},
+                slug: profile._json.email,
+                data: {
+                  elo: 100,
+                  reports: [],
+                  active_at: "1624486719882",
+                },
                 login_data: JSON.stringify({
                   ...profile._json,
                   accessToken,
@@ -107,7 +118,7 @@ const facebook = new FacebookStrategy(
           }
         );
       } else {
-        user = tools._.head(user);
+        user = _.head(user);
       }
       return done(null, jwt.sign({ id: user.id }, config.signatureKey));
     }
