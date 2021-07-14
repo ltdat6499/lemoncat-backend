@@ -60,8 +60,11 @@ app.get("/auth/google/callback", exportPassport.googleCallback, (req, res) =>
 app.post("/profile", async (req, res) => {
   const { data, err } = jwt.verify(req.body.token, configs.signatureKey);
   if (err.length) return res.json({ error: err });
-  const user = await controller.getById("users", data.id);
-  return res.json({ data: user });
+  if (data.id) {
+    const user = await controller.getById("users", data.id);
+    return res.json({ data: user });
+  }
+  return res.json({ data: {} });
 });
 app.use("/graphql", router.graphql);
 

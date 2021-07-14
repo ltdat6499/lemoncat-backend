@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 
-const sign = (data, key) => jwt.sign(data, key, { expiresIn: "1h" });
+const sign = (data, key) => jwt.sign(data, key, { expiresIn: "7d" });
 
 const verify = (token, key) =>
   jwt.verify(token, key, (err, data) => {
