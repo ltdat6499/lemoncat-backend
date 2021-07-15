@@ -55,7 +55,7 @@ type User {
   image: String
   status: Boolean
   role: String
-  # data: UserData
+  data: UserData
   slug: String
   createdAt: DateTime
   updatedAt: DateTime
@@ -72,7 +72,7 @@ type UserReport {
 
 type UserData {
   elo: String
-  reports: [UserReport]
+  # reports: [UserReport]
   working: String
   activeAt: DateTime
 }
@@ -406,12 +406,7 @@ type Query {
   persons(page: Int, size: Int): [Person]
   personBySlug(slug: String): Person
   person(id: String): Person
-  posts(
-    page: Int
-    size: Int
-    type: String
-    section: String
-  ): postsResult
+  posts(page: Int, size: Int, type: String, section: String): postsResult
   post(id: String): Post
   latestNews(slug: String): [Post]
   latestGuides(slug: String): [Post]
