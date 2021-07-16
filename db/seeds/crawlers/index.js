@@ -335,61 +335,61 @@ const mapping = async () => {
 // angry 4
 const wilsonScore = require("wilson-score-rank");
 
-// const setScoreChildComments = async () => {
-//   let comments = await knex("actions")
-//     .select("id")
-//     .where({ type: "comment", parent_type: "comment" });
+const setScoreChildComments = async (commentId) => {
+  let comments = await knex("actions")
+    .select("id")
+    .where({ type: "comment", parent_type: "comment", parent: commentId});
 
-//   for (const item of comments) {
-//     let interacts = await knex("actions")
-//       .select("data", "uid")
-//       .where({ parent: item.id, type: "interact" });
-//     for (const interact of interacts) {
-//       const userElo = await knex("users")
-//         .select("data")
-//         .where({ id: interact.uid });
-//       interact.elo = parseInt(userElo[0].data.elo) / 100;
-//     }
-//     let total = 0,
-//       positive = 0;
-//     for (const interact of interacts) {
-//       switch (interact.data) {
-//         case "love":
-//           total += 4 * interact.elo;
-//           positive += 4 * interact.elo;
-//           break;
-//         case "care":
-//           total += 3 * interact.elo;
-//           positive += 3 * interact.elo;
-//           break;
-//         case "wow":
-//           total += 2 * interact.elo;
-//           positive += 2 * interact.elo;
-//           break;
-//         case "like":
-//           total += 4 * interact.elo;
-//           positive += 2 * interact.elo;
-//           break;
-//         case "dislike":
-//           total += 2 * interact.elo;
-//           break;
-//         case "angry":
-//           total += 4 * interact.elo;
-//           break;
-//         default:
-//           break;
-//       }
-//     }
-//     const score = wilsonScore.lowerBound(positive, total);
-//     await knex("actions")
-//       .update({
-//         score,
-//       })
-//       .where({ id: item.id });
-//     console.log({ id: item.id, score });
-//   }
-//   console.log("DONE");
-// };
+  for (const item of comments) {
+    let interacts = await knex("actions")
+      .select("data", "uid")
+      .where({ parent: item.id, type: "interact" });
+    for (const interact of interacts) {
+      const userElo = await knex("users")
+        .select("data")
+        .where({ id: interact.uid });
+      interact.elo = parseInt(userElo[0].data.elo) / 100;
+    }
+    let total = 0,
+      positive = 0;
+    for (const interact of interacts) {
+      switch (interact.data) {
+        case "love":
+          total += 4 * interact.elo;
+          positive += 4 * interact.elo;
+          break;
+        case "care":
+          total += 3 * interact.elo;
+          positive += 3 * interact.elo;
+          break;
+        case "wow":
+          total += 2 * interact.elo;
+          positive += 2 * interact.elo;
+          break;
+        case "like":
+          total += 4 * interact.elo;
+          positive += 2 * interact.elo;
+          break;
+        case "dislike":
+          total += 2 * interact.elo;
+          break;
+        case "angry":
+          total += 4 * interact.elo;
+          break;
+        default:
+          break;
+      }
+    }
+    const score = wilsonScore.lowerBound(positive, total);
+    await knex("actions")
+      .update({
+        score,
+      })
+      .where({ id: item.id });
+    console.log({ id: item.id, score });
+  }
+  console.log("DONE");
+};
 
 const getRandomInt = (min, max) => {
   min = Math.ceil(min);
