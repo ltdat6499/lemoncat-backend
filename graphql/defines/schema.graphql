@@ -119,10 +119,10 @@ input ActionInput {
   id: String
   token: String!
   action: String!
+  postId: String!
   type: String!
   parentType: String!
   parent: String!
-  uid: String!
   data: String!
 }
 
@@ -361,7 +361,7 @@ type flimsResult {
   count: Int
 }
 
-type postsResult {
+type PostsResult {
   results: [Post]
   count: Int
 }
@@ -397,6 +397,11 @@ type MenuPosts {
   latest: [Post]
 }
 
+type ActionResult {
+  result: Action
+  error: String
+}
+
 # ------------------------------------------------------------------------------------------------
 
 type Query {
@@ -421,7 +426,7 @@ type Query {
   persons(page: Int, size: Int): [Person]
   personBySlug(slug: String): Person
   person(id: String): Person
-  posts(page: Int, size: Int, type: String, section: String): postsResult
+  posts(page: Int, size: Int, type: String, section: String): PostsResult
   post(id: String): Post
   latestNews(slug: String): [Post]
   latestGuides(slug: String): [Post]
@@ -432,7 +437,7 @@ type Query {
 
 type Mutation {
   updateUser(input: UserInput): User
-  updateAction(input: ActionInput): Action
+  updateAction(input: ActionInput): ActionResult
   updateFlim(input: FlimInput): Flim
   updatePerson(input: PersonInput): Person
   updatePost(input: PostInput): Post
