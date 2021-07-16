@@ -37,20 +37,11 @@ module.exports = {
     },
   },
   Mutation: {
-    async createPost(__, { input }) {
-      input = tools.changeCaseType(input, "snakeCase");
-      const [result] = await controllers.create("posts", input);
-      return result;
-    },
     async updatePost(__, args) {
       let { input, id } = args;
       input = tools.changeCaseType(input, "snakeCase");
       const [result] = await controllers.update("posts", id, input);
       return result;
-    },
-    async deletePost(__, { id }) {
-      const result = await controllers.deleteById("posts", id);
-      return result.length;
     },
   },
   Interact: {

@@ -78,6 +78,9 @@ type UserData {
 }
 
 input UserInput {
+  id: String
+  token: String!
+  action: String!
   email: String
   password: String
   name: String
@@ -113,11 +116,14 @@ type Action {
 }
 
 input ActionInput {
-  type: String
-  parentType: String
-  parent: String
-  uid: String
-  data: String
+  id: String
+  token: String!
+  action: String!
+  type: String!
+  parentType: String!
+  parent: String!
+  uid: String!
+  data: String!
 }
 
 # ----------------------------------------------------------------------------------------------------------------------------------
@@ -244,6 +250,9 @@ type Flim {
 }
 
 input FlimInput {
+  id: String
+  token: String!
+  action: String!
   type: String
   info: FlimInfoInput
   whatToKnows: [FlimWhatToKnowInput]
@@ -270,6 +279,9 @@ type Person {
 }
 
 input PersonInput {
+  id: String
+  token: String!
+  action: String!
   name: String
   birth: Date
   bornIn: String
@@ -331,6 +343,9 @@ type Post {
 }
 
 input PostInput {
+  id: String
+  token: String!
+  action: String!
   type: String
   uid: String
   title: String
@@ -416,21 +431,11 @@ type Query {
 }
 
 type Mutation {
-  createUser(input: UserInput): User
-  updateUser(id: String, input: UserInput): User
-  deleteUser(id: String): Boolean
-  createAction(input: ActionInput): Action
-  updateAction(id: String, input: ActionInput): Action
-  deleteAction(id: String): Boolean
-  createFlim(input: FlimInput): Flim
-  updateFlim(id: String, input: FlimInput): Flim
-  deleteFlim(id: String): Boolean
-  createPerson(input: PersonInput): Person
-  updatePerson(id: String, input: PersonInput): Person
-  deletePerson(id: String): Boolean
-  createPost(input: PostInput): Post
-  updatePost(id: String, input: PostInput): Post
-  deletePost(id: String): Boolean
+  updateUser(input: UserInput): User
+  updateAction(input: ActionInput): Action
+  updateFlim(input: FlimInput): Flim
+  updatePerson(input: PersonInput): Person
+  updatePost(input: PostInput): Post
 }
 
 schema {

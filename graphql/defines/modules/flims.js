@@ -78,20 +78,11 @@ module.exports = {
     },
   },
   Mutation: {
-    async createFlim(__, { input }) {
-      input = tools.changeCaseType(input, "snakeCase");
-      const [result] = await controllers.create("flims", input);
-      return result;
-    },
     async updateFlim(__, args) {
       let { input, id } = args;
       input = tools.changeCaseType(input, "snakeCase");
       const [result] = await controllers.update("flims", id, input);
       return result;
-    },
-    async deleteFlim(__, { id }) {
-      const result = await controllers.deleteById("flims", id);
-      return result.length;
     },
   },
   Flim: {

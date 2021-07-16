@@ -13,20 +13,11 @@ module.exports = {
     },
   },
   Mutation: {
-    async createAction(__, { input }) {
-      input = tools.changeCaseType(input, "snakeCase");
-      const [result] = await controllers.create("actions", input);
-      return result;
-    },
     async updateAction(__, args) {
       let { input, id } = args;
       input = tools.changeCaseType(input, "snakeCase");
       const [result] = await controllers.update("actions", id, input);
       return result;
-    },
-    async deleteAction(__, { id }) {
-      const result = await controllers.deleteById("actions", id);
-      return result.length;
     },
   },
   Action: {
