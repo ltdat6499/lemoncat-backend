@@ -169,9 +169,10 @@ module.exports = {
       let result = {};
       if (input.action === "update")
         result = await controllers.update("actions", input.id, data);
-      else if (input.action === "create")
+      else if (input.action === "create") {
+        data.id = input.id;
         result = await controllers.create("actions", data);
-      else if (input.action === "delete")
+      } else if (input.action === "delete")
         result = await controllers.deleteById("actions", input.id);
       else
         return {

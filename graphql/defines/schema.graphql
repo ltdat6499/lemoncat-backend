@@ -280,7 +280,7 @@ type Person {
 }
 
 input PersonInput {
-  id: String
+  id: String!
   token: String!
   action: String!
   name: String

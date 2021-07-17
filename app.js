@@ -66,6 +66,14 @@ app.post("/profile", async (req, res) => {
   }
   return res.json({ data: {} });
 });
+app.get("/genIds", async (req, res) => {
+  const results = [];
+  for (let i = 0; i < 100; i++) {
+    const id = await controller.knex.raw("select lemoncat.next_id() as id");
+    results.push(id.rows[0].id);
+  }
+  return res.json(results);
+});
 app.use("/graphql", router.graphql);
 
 // catch 404 and forward to error handler
