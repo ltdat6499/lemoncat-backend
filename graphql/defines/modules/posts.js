@@ -35,6 +35,14 @@ module.exports = {
       if (content) result.content = content;
       return result;
     },
+    async reviewsForFlim(__, args) {
+      const { flimId } = args;
+      return await controllers
+        .knex("posts")
+        .select()
+        .where({ type: "review" })
+        .andWhereRaw(`data->>'flim' = ?`, flimId);
+    },
   },
   Mutation: {
     async updatePost(__, args) {
