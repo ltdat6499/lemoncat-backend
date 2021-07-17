@@ -36,7 +36,11 @@ module.exports = {
       return result;
     },
     async reviewsForFlim(__, args) {
-      const { flimId } = args;
+      let { flimId, slug } = args;
+      if (slug && slug.length) {
+        let id = await controllers.knex("flims").select("id").where({ slug });
+        flimId = id[0].id
+      }
       return await controllers
         .knex("posts")
         .select()

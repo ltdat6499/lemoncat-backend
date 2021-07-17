@@ -434,7 +434,7 @@ type Query {
   menuPosts(slug: String): MenuPosts
   freshNewsInWeek(slug: String): [Post]
   postBySlug(slug: String): Post
-  reviewsForFlim(flimId: String): [Post]
+  reviewsForFlim(flimId: String, slug: String): [Post]
 }
 
 type Mutation {
