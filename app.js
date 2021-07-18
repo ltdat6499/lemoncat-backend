@@ -74,6 +74,19 @@ app.get("/genIds", async (req, res) => {
   }
   return res.json(results);
 });
+app.post("/ownerReviewByFlim", async (req, res) => {
+  const { data, err } = jwt.verify(req.body.token, configs.signatureKey);
+  const flim = await controller
+    .knex("flims")
+    .select("id")
+    .where({ slug: req.body.slug });
+  const result = await controller
+    .knex("posts")
+    .select()
+    .where({ type: "review", uid: data.id })
+    .andWhereRaw(`data->>'flim' = ?`, [flim[0].id]).first();
+  return res.json(result);
+});
 app.use("/graphql", router.graphql);
 
 // catch 404 and forward to error handler

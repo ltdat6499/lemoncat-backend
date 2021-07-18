@@ -348,12 +348,10 @@ input PostInput {
   token: String!
   action: String!
   type: String
-  uid: String
   title: String
   content: String
   data: PostDataInput
   tags: [String]
-  status: Boolean
   slug: String
 }
 
@@ -403,6 +401,11 @@ type ActionResult {
   error: String
 }
 
+type PostResult {
+  result: Post
+  error: String
+}
+
 # ------------------------------------------------------------------------------------------------
 
 type Query {
@@ -442,7 +445,7 @@ type Mutation {
   updateAction(input: ActionInput): ActionResult
   updateFlim(input: FlimInput): Flim
   updatePerson(input: PersonInput): Person
-  updatePost(input: PostInput): Post
+  updatePost(input: PostInput): PostResult
 }
 
 schema {
