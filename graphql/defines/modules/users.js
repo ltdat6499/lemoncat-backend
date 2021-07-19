@@ -1,4 +1,6 @@
 const controllers = require("../../../controllers");
+const jwt = require("../../../middlewares/jwt");
+const configs = require("../../../configs");
 
 module.exports = {
   Query: {
@@ -9,6 +11,35 @@ module.exports = {
     async user(__, args) {
       const { id } = args;
       return await controllers.getById("users", id);
+    },
+    async getUserInfo(__, args) {
+      const { token } = args;
+      const auth = jwt.verify(token, configs.signatureKey);
+      if (!auth.data.id)
+        return {
+          reviews: [],
+          news: [],
+          histories: [],
+        };
+      const id = auth.data.id;
+      const histories = await controllers
+        .knex("actions")
+        .select()
+        .where({ uid: id });
+      const reviews = await controllers
+        .knex("posts")
+        .select()
+        .where({ uid: id, type: "review" });
+      const news = await controllers
+        .knex("posts")
+        .select()
+        .where({ uid: id, type: "news" });
+
+      return {
+        reviews,
+        news,
+        histories,
+      };
     },
   },
   Mutation: {

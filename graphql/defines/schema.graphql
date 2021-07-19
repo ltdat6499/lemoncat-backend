@@ -125,6 +125,7 @@ input ActionInput {
   parent: String!
   data: String!
   score: Int
+  post: String
 }
 
 # ----------------------------------------------------------------------------------------------------------------------------------
@@ -311,6 +312,7 @@ type Interact {
   user: User
   emoji: String
   score: String
+  post: String
 }
 
 type Comment {
@@ -318,6 +320,7 @@ type Comment {
   user: User
   content: String
   score: String
+  post: String
   childComments: [Comment]
   interacts: [Interact]
   createdAt: DateTime
@@ -406,6 +409,12 @@ type PostResult {
   error: String
 }
 
+type UserInfo {
+  reviews: [Post]
+  news: [Post]
+  histories: [Action]
+}
+
 # ------------------------------------------------------------------------------------------------
 
 type Query {
@@ -438,6 +447,8 @@ type Query {
   freshNewsInWeek(slug: String): [Post]
   postBySlug(slug: String): Post
   reviewsForFlim(flimId: String, slug: String): [Post]
+  getUserInfo(token: String): UserInfo
+
 }
 
 type Mutation {

@@ -89,7 +89,6 @@ module.exports = {
         input.score = 0;
         input.tags = [];
         input.status = true;
-        console.log(input);
         result = await controllers.create("posts", input);
       } else if (action === "delete")
         result = await controllers.deleteById("posts", input.id);

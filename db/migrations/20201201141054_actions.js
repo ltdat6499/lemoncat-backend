@@ -9,6 +9,7 @@ exports.up = async (knex) => {
       uid BIGINT,
       data TEXT,
       score TEXT,
+      post TEXT,
       created_at timestamptz DEFAULT now(),
       updated_at timestamptz DEFAULT now()
     )
