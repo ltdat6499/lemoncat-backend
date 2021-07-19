@@ -6,7 +6,6 @@ const { knex } = require("../../../controllers");
 const configs = require("../../../configs");
 
 const setScore = async (postId) => {
-  console.log(postId);
   let totalScore = 0;
   let comments = await knex("actions")
     .select()

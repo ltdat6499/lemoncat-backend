@@ -111,6 +111,7 @@ type Action {
   parent: JSON
   user: User
   data: String
+  post: String
   createdAt: DateTime
   updatedAt: DateTime
 }
