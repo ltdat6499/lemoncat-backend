@@ -6,17 +6,16 @@ const { knex } = require("../../../controllers");
 const configs = require("../../../configs");
 
 const setScore = async (postId) => {
+  console.log(postId);
   let totalScore = 0;
   let comments = await knex("actions")
     .select()
     .where({ type: "comment", parent_type: "post", parent: postId });
-
   for (const comment of comments) {
     comment.score = 0;
     const childComments = await knex("actions")
       .select()
       .where({ type: "comment", parent_type: "comment", parent: comment.id });
-
     for (const childComment of childComments) {
       const interacts = await knex("actions").select("data", "score").where({
         type: "interact",
@@ -93,12 +92,16 @@ const setScore = async (postId) => {
     comment.score += wilsonScore.lowerBound(positive, total);
     totalScore += comment.score;
     const childIds = childComments.map((item) => item.id);
-    await knex("actions").whereIn("id", childIds).del();
-    await knex("actions").insert(childComments);
+    if (childIds.length) {
+      await knex("actions").whereIn("id", childIds).del();
+      await knex("actions").insert(childComments);
+    }
   }
   const ids = comments.map((item) => item.id);
-  await knex("actions").whereIn("id", ids).del();
-  await knex("actions").insert(comments);
+  if (ids.length) {
+    await knex("actions").whereIn("id", ids).del();
+    await knex("actions").insert(comments);
+  }
 
   let interacts = await knex("actions")
     .select("data", "score")
@@ -164,6 +167,7 @@ module.exports = {
         parent_type: input.parentType,
         uid: auth.data.id,
         data: input.data,
+        post: input.post,
       };
       if (input.type === "interact") data.score = input.score;
       let result = {};

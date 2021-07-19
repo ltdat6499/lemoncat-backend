@@ -448,7 +448,6 @@ type Query {
   postBySlug(slug: String): Post
   reviewsForFlim(flimId: String, slug: String): [Post]
   getUserInfo(token: String): UserInfo
-
 }
 
 type Mutation {
