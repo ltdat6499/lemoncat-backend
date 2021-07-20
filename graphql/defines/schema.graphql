@@ -448,7 +448,7 @@ type Query {
   freshNewsInWeek(slug: String): [Post]
   postBySlug(slug: String): Post
   reviewsForFlim(flimId: String, slug: String): [Post]
-  getUserInfo(token: String): UserInfo
+  getUserInfo(token: String, slug: String): UserInfo
 }
 
 type Mutation {

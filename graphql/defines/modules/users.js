@@ -13,7 +13,7 @@ module.exports = {
       return await controllers.getById("users", id);
     },
     async getUserInfo(__, args) {
-      const { token } = args;
+      const { token, slug } = args;
       const auth = jwt.verify(token, configs.signatureKey);
       if (!auth.data.id)
         return {
@@ -21,25 +21,52 @@ module.exports = {
           news: [],
           histories: [],
         };
-      const id = auth.data.id;
-      const histories = await controllers
-        .knex("actions")
-        .select()
-        .where({ uid: id });
-      const reviews = await controllers
-        .knex("posts")
-        .select()
-        .where({ uid: id, type: "review" });
-      const news = await controllers
-        .knex("posts")
-        .select()
-        .where({ uid: id, type: "news" });
+      if (slug && slug.length) {
+        const user = await controllers
+          .knex("users")
+          .select("id")
+          .where({ slug })
+          .limit(1);
+        const id = user[0].id;
+        const histories = await controllers
+          .knex("actions")
+          .select()
+          .where({ uid: id });
+        const reviews = await controllers
+          .knex("posts")
+          .select()
+          .where({ uid: id, type: "review" });
+        const news = await controllers
+          .knex("posts")
+          .select()
+          .where({ uid: id, type: "news" });
 
-      return {
-        reviews,
-        news,
-        histories,
-      };
+        return {
+          reviews,
+          news,
+          histories,
+        };
+      } else {
+        const id = auth.data.id;
+        const histories = await controllers
+          .knex("actions")
+          .select()
+          .where({ uid: id });
+        const reviews = await controllers
+          .knex("posts")
+          .select()
+          .where({ uid: id, type: "review" });
+        const news = await controllers
+          .knex("posts")
+          .select()
+          .where({ uid: id, type: "news" });
+
+        return {
+          reviews,
+          news,
+          histories,
+        };
+      }
     },
   },
   Mutation: {

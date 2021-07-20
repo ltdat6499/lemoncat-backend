@@ -57,6 +57,14 @@ app.get("/auth/google", exportPassport.googleAuth);
 app.get("/auth/google/callback", exportPassport.googleCallback, (req, res) =>
   res.redirect("http://localhost:3842/#/login?token=" + req.user)
 );
+app.post("/userInfo", async (req, res) => {
+  const data = await controller
+    .knex("users")
+    .select("image", "name", "email", "role", "data")
+    .where({ slug: req.body.slug })
+    .limit(1);
+  return res.json(data[0]);
+});
 app.post("/profile", async (req, res) => {
   const { data, err } = jwt.verify(req.body.token, configs.signatureKey);
   if (err.length) return res.json({ error: err });
@@ -84,7 +92,8 @@ app.post("/ownerReviewByFlim", async (req, res) => {
     .knex("posts")
     .select()
     .where({ type: "review", uid: data.id })
-    .andWhereRaw(`data->>'flim' = ?`, [flim[0].id]).first();
+    .andWhereRaw(`data->>'flim' = ?`, [flim[0].id])
+    .first();
   return res.json(result);
 });
 app.use("/graphql", router.graphql);
