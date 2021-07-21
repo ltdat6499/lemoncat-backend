@@ -86,6 +86,8 @@ module.exports = {
       if (action === "update")
         result = await controllers.update("posts", input.id, input);
       else if (action === "create") {
+        input.data.preview_poster = input.data.previewPoster;
+        delete input.data.previewPoster;
         input.score = 0;
         input.tags = [];
         input.status = true;
