@@ -56,7 +56,7 @@ app.get(
 );
 app.get("/auth/google", exportPassport.googleAuth);
 app.get("/auth/google/callback", exportPassport.googleCallback, (req, res) =>
-  res.redirect("http://localhost:3842/#/login?token=" + req.user)
+  res.redirect("http://localhost:3842/l/" + req.user)
 );
 app.post("/userInfo", async (req, res) => {
   const data = await controller

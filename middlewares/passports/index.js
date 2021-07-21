@@ -46,7 +46,7 @@ const google = new GoogleStrategy(
         1,
         1
       );
-      if (user.length <= 0) {
+      if (!user.length) {
         user = await controller.create("users", {
           name: profile.displayName,
           email: profile._json.email,
@@ -56,6 +56,7 @@ const google = new GoogleStrategy(
           data: {
             elo: 100,
             reports: [],
+            working: "LEMONCAT",
             active_at: "1624486719882",
           },
           login_data: JSON.stringify({
@@ -64,7 +65,7 @@ const google = new GoogleStrategy(
           }),
         });
       } else {
-        user = _.head(user);
+        user = user[0];
       }
       return done(null, jwt.sign({ id: user.id }, config.signatureKey));
     }

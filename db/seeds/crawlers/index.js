@@ -286,4 +286,15 @@ const getNull = async () => {
   console.log("DONE");
 };
 
-getNull();
+// getNull();
+
+// const setWk = async () => {
+//   const data = await knex("users").select("id", "data").where({ role: "user" });
+//   for (const item of data) {
+//     if (!item.data.working) {
+//       item.data.working = "LEMONCAT";
+//       await knex("users").where({ id: item.id }).update({ data: item.data });
+//       console.log(item.id);
+//     }
+//   }
+// };
