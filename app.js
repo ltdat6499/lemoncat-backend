@@ -82,6 +82,14 @@ app.get("/genIds", async (req, res) => {
   }
   return res.json(results);
 });
+app.post("/getPost", async (req, res) => {
+  const result = await controller
+    .knex("posts")
+    .select()
+    .where({ id: req.body.id })
+    .first();
+  return res.json(result);
+});
 app.post("/ownerReviewByFlim", async (req, res) => {
   const { data, err } = jwt.verify(req.body.token, configs.signatureKey);
   const flim = await controller

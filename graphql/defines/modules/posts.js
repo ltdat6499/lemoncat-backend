@@ -81,13 +81,14 @@ module.exports = {
       });
       delete input.token;
       delete input.action;
-
+      if (input.data.previewPoster) {
+        input.data.preview_poster = input.data.previewPoster;
+        delete input.data.previewPoster;
+      }
       let result = {};
       if (action === "update")
         result = await controllers.update("posts", input.id, input);
       else if (action === "create") {
-        input.data.preview_poster = input.data.previewPoster;
-        delete input.data.previewPoster;
         input.score = 0;
         input.tags = [];
         input.status = true;
