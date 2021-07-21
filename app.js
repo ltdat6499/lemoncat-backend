@@ -11,6 +11,7 @@ const passport = require("passport");
 const configs = require("./configs");
 const jwt = require("./middlewares/jwt/");
 const controller = require("./controllers");
+const tools = require("./global");
 const { setup, exportPassport } = require("./middlewares/").passports;
 
 app.use(cors());
@@ -89,6 +90,44 @@ app.post("/getPost", async (req, res) => {
     .where({ id: req.body.id })
     .first();
   return res.json(result);
+});
+app.post("/register", async (req, res) => {
+  const users = await controller
+    .knex("users")
+    .select("id")
+    .where({ email: req.body.email });
+  if (users.length)
+    return res.json({
+      error: "email is exist",
+    });
+  const data = {
+    name: req.body.name,
+    email: req.body.email,
+    password: await tools.hashPassword(req.body.password),
+    image:
+      "https://d2a5cgar23scu2.cloudfront.net/static/images/redesign/user.none.tmb.jpg",
+    status: true,
+    role: "user",
+    data: {
+      elo: 100,
+      reports: [],
+      working: "LEMONCAT",
+      active_at: Date.now().toString(),
+    },
+    slug:
+      req.body.name.toLowerCase().replaceAll(" ", "-") +
+      "-" +
+      req.body.email
+        .toLowerCase()
+        .replace(/[`~!@#$%^&*()_|+\-=?;:'",.<>\{\}\[\]\\\/]/gi, ""),
+  };
+  const result = await controller.knex("users").insert(data).returning("*");
+  const id = result[0].id;
+  const token = jwt.sign({ id }, configs.signatureKey);
+  console.log("🚀 ---------------------------");
+  console.log("🚀 ~ app.post ~ token", token);
+  console.log("🚀 ---------------------------");
+  return res.json(token);
 });
 app.post("/ownerReviewByFlim", async (req, res) => {
   const { data, err } = jwt.verify(req.body.token, configs.signatureKey);
