@@ -1,6 +1,8 @@
+const fs = require("fs");
 const controllers = require("../../../controllers");
 const jwt = require("../../../middlewares/jwt");
 const configs = require("../../../configs");
+const tools = require("../../../global");
 
 module.exports = {
   Query: {
@@ -71,9 +73,41 @@ module.exports = {
   },
   Mutation: {
     async updateUser(__, args) {
-      const { input, id } = args;
-      const [result] = await controllers.update("users", id, input);
-      return result;
+      let { input } = args;
+      const auth = jwt.verify(input.token, configs.signatureKey);
+      if (!auth.data.id)
+        return {
+          result: {},
+          error: auth.err,
+        };
+      let result;
+      if (input.action === "update") {
+        const user = await controllers
+          .knex("users")
+          .select()
+          .where({ id: auth.data.id })
+          .first();
+        if (user.password && user.password.length && input.password.length) {
+          user.password = await tools.hashPassword(input.password);
+        }
+        user.name = input.name;
+        user.image = input.image;
+        user.data.working = input.working;
+        result = await controllers.update("users", auth.data.id, user);
+      } else if (input.action === "create") {
+        data.id = auth.data.id;
+
+        result = await controllers.create("users", data);
+      } else
+        return {
+          result: {},
+          error: "invalid action verb",
+        };
+
+      return {
+        result: result[0],
+        error: "",
+      };
     },
   },
   User: {

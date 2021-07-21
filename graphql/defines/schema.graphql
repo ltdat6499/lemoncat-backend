@@ -87,6 +87,7 @@ input UserInput {
   image: String
   status: Boolean
   role: String
+  working: String
   data: UserDataInput
 }
 
@@ -416,6 +417,11 @@ type UserInfo {
   histories: [Action]
 }
 
+type UserResult {
+  result: User
+  error: String
+}
+
 # ------------------------------------------------------------------------------------------------
 
 type Query {
@@ -452,7 +458,7 @@ type Query {
 }
 
 type Mutation {
-  updateUser(input: UserInput): User
+  updateUser(input: UserInput): UserResult
   updateAction(input: ActionInput): ActionResult
   updateFlim(input: FlimInput): Flim
   updatePerson(input: PersonInput): Person
