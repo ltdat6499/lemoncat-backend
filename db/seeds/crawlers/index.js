@@ -1,10 +1,9 @@
 const fs = require("fs");
 const readline = require("readline");
-const knex = require("../../../controllers/knex");
-
 const moment = require("moment");
+const wilsonScore = require("wilson-score-rank");
 const _ = require("lodash");
-// const interacts = ["love", "care", "wow", "like", "dislike", "angry"];
+const knex = require("../../../controllers/knex");
 
 const loadArray = async (path) => {
   const file = fs.createReadStream(path);
@@ -19,14 +18,6 @@ const loadArray = async (path) => {
   }
   return results;
 };
-
-// love 4
-// care 3
-// wow  2
-// like 1
-// dislike 2
-// angry 4
-const wilsonScore = require("wilson-score-rank");
 
 const setScoreChildComments = async (commentId) => {
   let comments = await knex("actions")
@@ -298,3 +289,12 @@ const getNull = async () => {
 //     }
 //   }
 // };
+
+// love 4
+// care 3
+// wow  2
+// like 1
+// dislike 2
+// angry 4
+// User 1
+// S-User 100
