@@ -17,7 +17,6 @@
   },
   "homepage": "https://github.com/ltdat6499/lemoncat#readme",
   "dependencies": {
-    "@hapi/joi": "^17.1.1",
     "@tensorflow/tfjs": "^3.8.0",
     "acl": "^0.4.11",
     "axios": "^0.21.1",

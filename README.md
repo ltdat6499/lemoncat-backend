@@ -13,9 +13,10 @@
 
 ## Requirements
 
-* Node 8
-* Git
-* Contentful CLI
+* Node 14
+* Docker Compose
+* Graphql
+* Postgres
 
 ## Setup
 
@@ -38,6 +39,34 @@ docker-compose up
 cd db
 knex migrate:latest
 ```
+
+## Steps for read and write access (recommended)
+Setup ENV:
+```
+PG_CLIENT=pg
+PG_USER=docker
+PG_PASSWORD=docker
+PG_DB=lemoncat
+PG_HOST=127.0.0.1
+PG_PORT=5432
+MIGRATION_PATH=/db/migrations
+SEED_PATH=/db/seeds
+ADMIN_PASSWORD=docker
+PORT=5432
+GOOGLE_CONSUMER_KEY=<GOOGLE_KEY>
+GOOGLE_CONSUMER_SECRET=<GOOGLE_SECRET>
+FACEBOOK_CLIENT_ID=<FACEBOOK_ID>
+FACEBOOK_CLIENT_SECRET=<FACEBOOK_SECRET>
+JWT_KEY=<JWT_KEY>
+FLICKR_CONSUMER_KEY=<FLICKR_KEY>
+FLICKR_CONSUMER_SECRET=<FLICKR_SECRET>
+FLICKR_OAUTH_TOKEN=<FLICKR_TOKEN>
+FLICKR_OAUTH_TOKEN_SECRET=<FLICKR_TOKEN_SECRET>
+```
+
+Final Step:
+
+Open [http://localhost:3841/graphql](http://localhost:3841/graphql) and call graphql api
 
 ## Usage
 
