@@ -23,7 +23,7 @@ const score = [
 const reviews = ["td[class='right hidden-xs']"];
 (async () => {
 	const results = [];
-	for (let i = 2021; i <= 2021; i++) {
+	for (let i = 1950; i <= 2021; i++) {
 		const html = await axios.get(
 			"https://www.rottentomatoes.com/top/bestofrt/?year=" + i
 		);
@@ -37,6 +37,7 @@ const reviews = ["td[class='right hidden-xs']"];
 					link: $(el).find(link.join(" > ")).text().trim(),
 					score: $(el).find(score.join(" > ")).text().trim(),
 					reviews: $(el).find(reviews.join(" > ")).text().trim(),
+                    year: i
 				});
 			});
 		console.log(i);
