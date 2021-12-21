@@ -124,9 +124,6 @@ app.post("/register", async (req, res) => {
   const result = await controller.knex("users").insert(data).returning("*");
   const id = result[0].id;
   const token = jwt.sign({ id }, configs.signatureKey);
-  console.log("🚀 ---------------------------");
-  console.log("🚀 ~ app.post ~ token", token);
-  console.log("🚀 ---------------------------");
   return res.json(token);
 });
 app.post("/ownerReviewByFlim", async (req, res) => {

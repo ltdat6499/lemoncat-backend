@@ -67,10 +67,13 @@
     "rbac": "^5.0.3",
     "request": "^2.88.2",
     "require-text": "0.0.1",
-    "selenium-webdriver": "^4.0.0-beta.4",
+    "selenium-webdriver": "^4.1.0",
     "spam-check": "^1.0.0",
     "striptags": "^3.2.0",
     "uuid": "^8.3.2",
     "wilson-score-rank": "^2.0.1"
+  },
+  "devDependencies": {
+    "chromedriver": "^96.0.0"
   }
 }
