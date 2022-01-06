@@ -94,7 +94,7 @@ const step2 = async () => {
 		await driver.executeScript(
 			"window.scrollTo(0, document.body.scrollHeight);"
 		);
-		let noImages = false;
+		let noImages = true;
 		try {
 			for (let i = 0; i < 20; i++) {
 				await driver
@@ -106,7 +106,7 @@ const step2 = async () => {
 					.sendKeys(Key.ENTER);
 			}
 		} catch (error) {
-			noImages = true;
+			noImages = false;
 		}
 
 		const html = await driver.getPageSource();

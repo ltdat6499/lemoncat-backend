@@ -1,1 +1,2 @@
+docker run -d --name selenium-hub -p 4444:4444 selenium/hub
 docker run -d -p 4444:4444 --shm-size="2g" selenium/standalone-chrome:4
