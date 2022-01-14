@@ -82,7 +82,9 @@ const step1 = async () => {
 };
 
 const step2 = async () => {
-	let casts = await knex("crawler_casts").select().where({ status: false });
+	let casts = await knex("crawler_casts").select().where({
+		status: false,
+	});
 	const driver = new Builder()
 		.forBrowser("chrome")
 		.usingServer("http://localhost:4444/wd/hub")
@@ -140,12 +142,32 @@ const step2 = async () => {
 						"https://" + ($(el).attr("src") + "").split("/http://")[1] + "";
 					images.push(image);
 				});
-		console.log({ name, birthday, birthplace, summary, images, link });
+		console.log({
+			name,
+			birthday,
+			birthplace,
+			summary,
+			images,
+			link,
+		});
 		await knex("result_casts").insert({
-			data: { name, birthday, birthplace, summary, images, link },
+			data: {
+				name,
+				birthday,
+				birthplace,
+				summary,
+				images,
+				link,
+			},
 		});
 
-		await knex("crawler_casts").update({ status: true }).where({ id: cast.id });
+		await knex("crawler_casts")
+			.update({
+				status: true,
+			})
+			.where({
+				id: cast.id,
+			});
 	}
 
 	await driver.quit();

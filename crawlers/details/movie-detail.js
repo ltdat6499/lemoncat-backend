@@ -126,7 +126,9 @@ const defaultAvatar =
 	"/assets/pizza-pie/images/poster_default_thumbnail.2ec144e61b4.jpg";
 
 const step1 = async () => {
-	let source = await knex("crawlers_movies").select().where({ status: false });
+	let source = await knex("crawlers_movies").select().where({
+		status: false,
+	});
 	source = _.reverse(source);
 	const driver = new Builder()
 		.forBrowser("chrome")
@@ -369,7 +371,9 @@ const step1 = async () => {
 			.update({
 				status: true,
 			})
-			.where({ id: movie.id });
+			.where({
+				id: movie.id,
+			});
 	}
 	await driver.quit();
 };
